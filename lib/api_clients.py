@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 Visão Tinker Bell — Clientes para APIs públicas
-BrasilAPI CNPJ, PNCP, CEIS/CNEP (Portal da Transparência).
+BrasilAPI CNPJ, CEIS/CNEP (Portal da Transparência).
+PNCP: ver módulo dedicado lib/pncp.py e scripts/pncp_fetch.py.
 Chave do Portal é opcional (env PORTAL_TRANSPARENCIA_KEY).
-Respeite rate limits e termos de uso.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional
 import requests
 
 HEADERS = {
-    "User-Agent": "VisaoTinkerBell/0.3 (pesquisa-transparencia; evidence-only)",
+    "User-Agent": "VisaoTinkerBell/0.4 (pesquisa-transparencia; evidence-only)",
     "Accept": "application/json",
 }
 
@@ -30,7 +30,6 @@ def _portal_headers() -> Dict[str, str]:
 
 
 def consultar_cnpj(cnpj: str) -> Optional[Dict[str, Any]]:
-    """Consulta CNPJ via BrasilAPI (público, sem chave)."""
     cnpj = "".join(filter(str.isdigit, cnpj))
     if len(cnpj) != 14:
         return None
@@ -47,25 +46,24 @@ def consultar_cnpj(cnpj: str) -> Optional[Dict[str, Any]]:
 def consultar_pncp_contrato(
     orgao_cnpj: str, ano: int, sequencial: int
 ) -> Optional[Dict[str, Any]]:
-    orgao_cnpj = "".join(filter(str.isdigit, orgao_cnpj))
-    url = f"https://pncp.gov.br/api/consulta/v1/orgaos/{orgao_cnpj}/compras/{ano}/{sequencial}"
+    """Atalho — preferir lib.pncp.consultar_contratacao."""
     try:
-        r = requests.get(url, headers=HEADERS, timeout=20)
-        if r.status_code == 200:
-            return r.json()
+        from lib.pncp import consultar_contratacao
+
+        return consultar_contratacao(orgao_cnpj, ano, sequencial)
     except Exception:
-        pass
-    return None
+        orgao_cnpj = "".join(filter(str.isdigit, orgao_cnpj))
+        url = f"https://pncp.gov.br/api/consulta/v1/orgaos/{orgao_cnpj}/compras/{ano}/{sequencial}"
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=20)
+            if r.status_code == 200:
+                return r.json()
+        except Exception:
+            pass
+        return None
 
 
-def consultar_ceis(
-    cnpj: str, pagina: int = 1
-) -> List[Dict[str, Any]]:
-    """
-    Consulta CEIS (Cadastro de Empresas Inidôneas e Suspensas).
-    Requer PORTAL_TRANSPARENCIA_KEY no ambiente.
-    Cadastro gratuito: https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email
-    """
+def consultar_ceis(cnpj: str, pagina: int = 1) -> List[Dict[str, Any]]:
     cnpj = "".join(filter(str.isdigit, cnpj))
     if len(cnpj) != 14:
         return []
@@ -83,13 +81,7 @@ def consultar_ceis(
     return []
 
 
-def consultar_cnep(
-    cnpj: str, pagina: int = 1
-) -> List[Dict[str, Any]]:
-    """
-    Consulta CNEP (Cadastro Nacional de Empresas Punidas — Lei Anticorrupção).
-    Requer PORTAL_TRANSPARENCIA_KEY.
-    """
+def consultar_cnep(cnpj: str, pagina: int = 1) -> List[Dict[str, Any]]:
     cnpj = "".join(filter(str.isdigit, cnpj))
     if len(cnpj) != 14:
         return []
@@ -108,7 +100,6 @@ def consultar_cnep(
 
 
 def sancao_resumo(cnpj: str) -> Dict[str, Any]:
-    """Resumo CEIS+CNEP para alimentar o motor de red flags."""
     ceis = consultar_ceis(cnpj)
     cnep = consultar_cnep(cnpj)
     return {
@@ -127,7 +118,6 @@ def sancao_resumo(cnpj: str) -> Dict[str, Any]:
 def build_context_from_cnpj(
     cnpj: str, valor_contrato: float = 0, incluir_sancoes: bool = True
 ) -> Dict[str, Any]:
-    """Monta contexto para o motor de red flags a partir de CNPJ (+ sanções se chave)."""
     data = consultar_cnpj(cnpj)
     if not data:
         ctx: Dict[str, Any] = {"cnpj": cnpj, "valorGlobal": valor_contrato}
@@ -151,6 +141,5 @@ def build_context_from_cnpj(
 
 
 if __name__ == "__main__":
-    print("Clientes: consultar_cnpj, consultar_ceis, consultar_cnep, sancao_resumo")
-    print("Defina PORTAL_TRANSPARENCIA_KEY para CEIS/CNEP.")
-    print("Cadastro: https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email")
+    print("api_clients + lib.pncp para PNCP completo")
+    print("PORTAL_TRANSPARENCIA_KEY para CEIS/CNEP")
