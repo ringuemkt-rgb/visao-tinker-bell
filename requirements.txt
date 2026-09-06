@@ -1,0 +1,14 @@
+# Visão Tinker Bell — dependências Python recomendadas
+pandas>=2.0
+networkx>=3.0
+pyvis>=0.3
+requests>=2.28
+duckdb>=0.9
+python-dateutil
+tqdm
+
+# Opcionais (instalar conforme necessidade)
+# neo4j
+# pygraphistry
+# gephi (desktop — não via pip)
+# sigma.js / cytoscape.js (frontend)
