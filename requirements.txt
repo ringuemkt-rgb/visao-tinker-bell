@@ -10,5 +10,5 @@ tqdm
 # Opcionais (instalar conforme necessidade)
 # neo4j
 # pygraphistry
-# gephi (desktop — não via pip)
-# sigma.js / cytoscape.js (frontend)
+# scrapling          # fallback HTML adaptativo — ver docs/html-fetch-ethics.md
+# scrapling[fetchers]  # se precisar StealthyFetcher / browser

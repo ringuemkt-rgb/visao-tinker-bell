@@ -7,7 +7,7 @@
 - **Portal da Transparência (CGU)** — API + downloads de contratos, emendas, transferências, CEIS, CNEP, lista de PEPs.
 - **Receita Federal** — Dumps mensais de CNPJ (QSA, sócios, capital, endereços).
 - **Câmara dos Deputados e Senado** — dadosabertos.camara.leg.br e legis.senado.leg.br (votações, CEAP/CEAPS).
-- **PNCP** (Portal Nacional de Contratações Públicas) — contratos, dispensas e inexigibilidades de União, estados e municípios.
+- **PNCP** — contratos, dispensas e inexigibilidades (ver `lib/pncp.py`, `docs/pncp.md`).
 - **TCU** — Listas de inidôneos e desqualificados.
 - **Querido Diário** — Diários oficiais e nomeações.
 - **Compras.gov.br** — preços homologados, CATMAT/CATSER.
@@ -16,57 +16,43 @@
 
 | Projeto | Repositório | Função principal | Integração Tinker Bell |
 |---------|-------------|------------------|------------------------|
-| **Monitor de Gravata** | [steinhauserhzs/monitor-de-gravata](https://github.com/steinhauserhzs/monitor-de-gravata) | Portal da Transparência 2.0: Ficha 360 de políticos, Manual do Candidato 2026, Radar de contratos + red flags, Ficha da empresa, Comparador de preços, 81 regras de red flags, casos comunitários, catálogo de APIs. Next.js, evidence-only, repo-as-database. | **Prioridade máxima**. Usar como referência de UI, regras de red flags e catálogo de APIs. Adaptar regras e módulos de ficha 360 / radar de contratos. |
-| Enriquecimetro | iosbilario/enriquecimetro | Evolução de patrimônio declarado (TSE bens) entre eleições | Pipeline de bens + wealth gap |
-| Tribuna | rafapolo/tribuna | Prestações de contas TSE em banco relacional + SQL para inquéritos | Base de receitas/despesas eleitorais |
-| VigiaBR | devitese/vigiabr | Multi-fonte + Score de Consistência (SCI 0–1000) + Neo4j | Scoring de consistência + grafo |
-| Olho Neles | olhoneles/olhoneles | Gastos parlamentares (CEAP etc.) de várias casas | Monitoramento de cota |
-| OPS | ops-org/operacao-politica-supervisionada | Auditoria de cota parlamentar | Auditoria de gastos |
-| BidRadarBrasil | matheushexsel/bidradarbrasil | Anomalias em licitações (PNCP + TSE + Receita + CGU): preço, relacionamento, objeto, estrutural, sanção | Radar de contratos e scoring de risco em licitações |
-| Basômetro | estadao/basometro | Monitoramento de governismo na Câmara | Análise de coerência de votos |
+| **Monitor de Gravata** | [steinhauserhzs/monitor-de-gravata](https://github.com/steinhauserhzs/monitor-de-gravata) | Ficha 360, red flags, radar de contratos, catálogo de APIs | Prioridade máxima — regras adaptadas em `rules/red_flags.json` |
+| Enriquecimetro | iosbilario/enriquecimetro | Evolução de patrimônio (TSE bens) | Pipeline de wealth gap |
+| Tribuna | rafapolo/tribuna | Prestações TSE em SQL | Receitas/despesas eleitorais |
+| VigiaBR | devitese/vigiabr | Multi-fonte + SCI + Neo4j | Scoring + grafo |
+| Olho Neles / OPS | olhoneles / ops-org | Gastos parlamentares (CEAP) | Cota parlamentar |
+| BidRadarBrasil | matheushexsel/bidradarbrasil | Anomalias em licitações | Radar PNCP |
+
+## Coleta HTML (fallback — Tier 3)
+
+| Ferramenta | Repo | Uso na VTB |
+|------------|------|------------|
+| **Scrapling** | [D4Vinci/Scrapling](https://github.com/D4Vinci/Scrapling) | Parser adaptativo + fetchers (HTTP / stealth). **Só** quando não há API oficial. Wrapper: `lib/html_fetch.py`. Ética: `docs/html-fetch-ethics.md`. |
+
+Ordem: API → dump oficial → HTML com hash. Nunca o inverso.
 
 ## Bases Globais e Cross-Border
 
-- **OpenSanctions** + PoliLoom + EveryPolitician — PEPs mundiais e Brasil.
-- **OCCRP Aleph** — Bilhões de registros, entity resolution, follow-the-money.
-- **OpenCorporates** + OpenOwnership — Registros societários e beneficiários finais.
-- **ICIJ Offshore Leaks Database**.
-- **LittleSis** — Redes de poder.
+- **OpenSanctions** + PoliLoom + EveryPolitician — PEPs.
+- **OCCRP Aleph** — entity resolution, follow-the-money.
+- **OpenCorporates** + OpenOwnership — sociedades e beneficiários.
+- **ICIJ Offshore Leaks** · **LittleSis**.
 
-## Ferramentas de Anomaly Scoring e Monitoramento
+## Visualização de Grafos
 
-- CongressWatch (US) — Anomaly Score 0–100 (trades, wealth gap, donor-vote).
-- UNREDACTED — Agentes de IA para gastos + doadores.
-- Capitol Trace / Open Cabinet — Trades e disclosures.
+- Desktop: **Gephi**, Cytoscape.
+- Python: **NetworkX**, **PyVis**, PyGraphistry.
+- Schema: FollowTheMoney → Neo4j.
+- Export VTB: `scripts/graph_export.py` (GraphML/GEXF).
 
-## Visualização de Grafos (essenciais)
+## Bancos e padrões
 
-### Desktop
-- **Gephi** — Layouts, community detection, centrality, publicação.
-- **Cytoscape**.
+- **DuckDB** (tabular) · **Neo4j** (grafo) · **FollowTheMoney (FtM)**.
 
-### Python / Notebooks
-- **NetworkX** + **PyVis** / streamlit-d3-network.
-- **PyGraphistry** (GPU, escala grande).
-- **neo4j-viz**.
-- **followthemoney-neomodel** (C4ADS) — Schema OpenSanctions → Neo4j.
+## Hugging Face
 
-### Web / Embed
-- **Sigma.js**, **Cytoscape.js**, **G6**, **React Flow**.
-
-### Plataformas OSINT com grafo
-- kipi, SpectraGraph, Flowsint, OpenGraph Intel (OGI), PivotGraph.
-
-## Bancos e Padrões
-
-- **Neo4j** (recomendado para path queries e grafos vivos).
-- **DuckDB** (análise tabular rápida + export).
-- **FollowTheMoney (FtM)** — padrão de dados anti-corrupção do OpenSanctions.
-
-## Hugging Face (apenas processamento)
-
-Modelos de entity extraction e NLP financeiro — usar somente para ajudar na extração de textos públicos, nunca como fonte de fato.
+Apenas NLP auxiliar em textos públicos — nunca como fonte de fato.
 
 ---
 
-Sempre registre a proveniência. Prefira Tier 1 e 2. Atualize este catálogo conforme novas fontes oficiais ou ferramentas open-source relevantes aparecerem.
+Sempre registre proveniência. Prefira Tier 1 e 2.
