@@ -1,30 +1,35 @@
-# Motor de Red Flags — Visão Tinker Bell
+# Motor de Red Flags + CEIS/CNEP
 
-Adaptado das regras públicas do **Monitor de Gravata** (https://github.com/steinhauserhzs/monitor-de-gravata).
+## Regras
 
-## Como testar agora
+Arquivo: `rules/red_flags.json` (25 regras implementadas na v6 Sprint A).
+
+Categorias: contratação, empresa, parlamentar, eleitoral.
+
+## Engine
 
 ```bash
-git clone https://github.com/ringuemkt-rgb/visao-tinker-bell.git
-cd visao-tinker-bell
-python -m venv .venv && source .venv/bin/activate
-pip install requests
+python -c "from lib.red_flags_engine import load_engine; e=load_engine(); print(len(e.rules))"
 python scripts/run_red_flags_example.py
 ```
 
-## Arquivos
+## CEIS / CNEP
 
-- `rules/red_flags.json` — catálogo das regras adaptadas (10 regras prioritárias implementadas)
-- `lib/red_flags_engine.py` — motor determinístico
-- `lib/api_clients.py` — clientes mínimos (BrasilAPI CNPJ, PNCP)
-- `scripts/run_red_flags_example.py` — exemplo executável
+```bash
+export PORTAL_TRANSPARENCIA_KEY="sua-chave"
+# Cadastro gratuito: https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email
 
-## Princípio
+python -c "
+from lib.api_clients import sancao_resumo, build_context_from_cnpj
+from lib.red_flags_engine import load_engine
+print(sancao_resumo('00000000000191'))  # exemplo — use CNPJ real de interesse público
+ctx = build_context_from_cnpj('CNPJ', valor_contrato=15_000_000)
+print(load_engine().evaluate(ctx))
+"
+```
 
-Red flags são **sinais objetivos**, não acusações. Cada finding traz a regra, severidade, fonte metodológica e evidência factual usada.
+Sem chave, `count_ceis`/`count_cnep` ficam 0 e a regra de sanção não dispara por falta de dados (não por “limpo”).
 
-## Próximos passos
+## ACH
 
-- Expandir as 81 regras do Monitor
-- Conectar CEIS/CNEP (precisa chave Portal da Transparência)
-- Pipeline completo: PNCP → CNPJ → regras → grafo → dossiê
+Template obrigatório: `assets/dossie-template.md` seção 6.
