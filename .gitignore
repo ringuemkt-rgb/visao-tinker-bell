@@ -1,0 +1,18 @@
+# Dados brutos e sensíveis
+data/raw/
+data/processed/
+*.csv
+*.parquet
+*.zip
+*.db
+*.sqlite
+
+# Ambiente
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
