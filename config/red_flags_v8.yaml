@@ -1,0 +1,45 @@
+version: 8.0.0
+semantics:
+  red_flag_is_proof: false
+  anomaly_is_crime: false
+  correlation_is_nexus: false
+  triage_priority_is_probability: false
+  automatic_corruption_label: forbidden
+families:
+  procurement:
+    - low_competition
+    - supplier_concentration
+    - repeated_emergency
+    - winner_recurrence
+    - threshold_proximity_requires_current_legal_validation
+    - amendment_recurrence
+  payment:
+    - duplicate_payment_candidate
+    - payment_linkage_gap
+    - contract_commitment_liquidation_payment_mismatch
+  corporate:
+    - shared_address
+    - shared_phone
+    - shared_email
+    - shared_partner
+    - recent_company_requires_context
+    - capital_contract_ratio_requires_context
+  electoral:
+    - electoral_counterparty_public_supplier_overlap
+    - declared_asset_variation_requires_reconciliation
+  network:
+    - high_degree_node
+    - repeated_intermediary
+    - cross-domain_overlap
+  price:
+    - normalized_price_anomaly
+  documentary:
+    - version_drift
+    - identifier_conflict
+    - missing_primary_document
+required_fields:
+  - evidence_ids
+  - method
+  - false_positive_risk
+  - alternative_explanations
+  - status

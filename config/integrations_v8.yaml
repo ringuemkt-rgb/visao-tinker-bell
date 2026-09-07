@@ -1,0 +1,44 @@
+version: 8.0.0
+policy: third_party_is_enrichment_not_ground_truth
+integrations:
+  - id: receita_cnpj_open_data
+    role: primary_or_official_structured_when_from_RFB
+    status: SOURCE_DEPENDENT
+    notes: Preferir dados abertos/consulta legítima da Receita e preservar versão/competência.
+  - id: minha_receita
+    repository: cuducos/minha-receita
+    role: derivative_bridge
+    status: S9_DISCONTINUED_OR_ARCHIVED
+    notes: Repositório GitHub arquivado; não usar como dependência estratégica primária.
+  - id: serenata_de_amor
+    repository: okfn-brasil/serenata-de-amor
+    role: methodology_reference
+    status: S6_OPERATIONAL_WITH_LIMITATIONS
+    notes: Referência de civic-tech/anomalias; upstream informa atualizações pouco frequentes.
+  - id: opensanctions
+    repository: opensanctions/opensanctions
+    role: enrichment_pep_sanctions
+    status: S1_REPOSITORY_FOUND
+    notes: Exige TOOLCHECK e reconciliação com fonte oficial antes de claim sensível.
+  - id: networkx
+    repository: networkx/networkx
+    role: graph_analytics
+    status: S5_OPERATIONAL
+    notes: Dependência runtime já exercitada pelo CI do projeto.
+  - id: neo4j
+    role: optional_graph_backend
+    status: S1_REPOSITORY_FOUND
+  - id: openrefine
+    role: optional_entity_reconciliation
+    status: S1_REPOSITORY_FOUND
+  - id: timesketch
+    role: optional_timeline_analysis
+    status: S1_REPOSITORY_FOUND
+  - id: spiderfoot
+    role: optional_osint_discovery
+    status: S1_REPOSITORY_FOUND
+rules:
+  tool_execution_must_be_logged: true
+  repository_found_is_not_operational: true
+  enrichment_match_is_not_identity_proof: true
+  sensitive_match_requires_primary_source: true
