@@ -1,0 +1,38 @@
+# Mapa de fontes candidatas. Cobertura/saúde devem ser avaliadas a cada missão.
+sources:
+  federal:
+    - PNCP
+    - Compras.gov.br
+    - Portal da Transparência da União
+    - TCU
+    - CGU
+    - SICONFI
+    - dados.gov.br
+    - CEIS
+    - CNEP
+    - CEPIM
+    - TSE
+    - CNJ/DataJud
+    - STF
+    - STJ
+    - TRFs
+  state_and_local:
+    - TCE
+    - TCM
+    - Ministérios Públicos Estaduais
+    - Tribunais de Justiça
+    - Diários Oficiais
+    - Portais de Transparência
+    - Assembleias Legislativas
+    - Câmaras Municipais
+    - Prefeituras
+    - SAPL quando adotado
+  corporate_and_registry:
+    - Receita Federal / CNPJ em consulta pública legítima
+    - Juntas Comerciais quando houver acesso público legítimo
+    - BrasilAPI como fonte derivada/ponte, não substituta de documento primário
+rules:
+  primary_source_priority: true
+  source_health_required: true
+  zero_result_is_not_absence: true
+  independent_corroboration_for_material_claims: true

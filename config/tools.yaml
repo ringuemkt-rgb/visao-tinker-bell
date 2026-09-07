@@ -1,0 +1,61 @@
+# Catálogo, não declaração de execução. Todo item começa conservadoramente em S0/S1 e deve passar TOOLCHECK.
+tools:
+  - tool_id: trafilatura
+    name: Trafilatura
+    category: web_text_extraction
+    repository: https://github.com/adbar/trafilatura
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Conteúdo extraído deve ser conferido contra a página/documento original"]
+  - tool_id: pymupdf
+    name: PyMuPDF
+    category: document_parsing
+    repository: https://github.com/pymupdf/PyMuPDF
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Parsing não substitui inspeção do documento original"]
+  - tool_id: ocrmypdf
+    name: OCRmyPDF
+    category: ocr_fallback
+    repository: https://github.com/ocrmypdf/OCRmyPDF
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["OCR é fallback; transcrição pode conter erro"]
+  - tool_id: duckdb
+    name: DuckDB
+    category: analytics
+    repository: https://github.com/duckdb/duckdb
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: networkx
+    name: NetworkX
+    category: graph_analytics
+    repository: https://github.com/networkx/networkx
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: openrefine
+    name: OpenRefine
+    category: reconciliation
+    repository: https://github.com/OpenRefine/OpenRefine
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: spiderfoot
+    name: SpiderFoot
+    category: osint_automation
+    repository: https://github.com/smicallef/spiderfoot
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Somente fontes abertas e finalidade legítima; correlações são leads"]
+  - tool_id: gephi
+    name: Gephi
+    category: graph_visualization
+    repository: https://github.com/gephi/gephi
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: docling
+    name: Docling
+    category: document_understanding
+    repository: https://github.com/docling-project/docling
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Saída de modelo/parsing nunca é fonte de fato"]

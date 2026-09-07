@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://visao-tinker-bell.local/schemas/case.schema.json",
+  "title": "VTB Case",
+  "type": "object",
+  "required": ["case_id", "question", "scope", "hypotheses"],
+  "properties": {
+    "case_id": {"type": "string", "minLength": 1},
+    "question": {"type": "string", "minLength": 1},
+    "scope": {
+      "type": "object",
+      "properties": {
+        "geography": {"type": "string"},
+        "time_range": {"type": "string"},
+        "entities": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "hypotheses": {"type": "array", "items": {"type": "object"}},
+    "claims": {"type": "array", "items": {"type": "object"}},
+    "gaps": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

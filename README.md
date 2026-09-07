@@ -1,89 +1,99 @@
-# Visão Tinker Bell 🦊 v7.0
+# Visão Tinker Bell 🦊 — Supreme v8.0
 
-**Plataforma open-source de inteligência forense baseada em evidência pública.**  
-Cruzamento de contratos, CNPJ, sanções, patrimônio declarado, grafos e ACH — **somente dados públicos**.
+**Runtime open-source de inteligência forense evidence-first para auditoria cívica e registros públicos brasileiros.**
 
-> Mostramos os números. Não presumimos a origem. Documentamos a cadeia.
+> Encontrar não é provar. Correlação não é nexo. Red flag não é evidência. Fonte quebrada não é ausência.
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
-[![Evidence-Only](https://img.shields.io/badge/Evidence-Only-green.svg)]()
-[![Arch v7](https://img.shields.io/badge/Architecture-v7.0-blueviolet.svg)](docs/ARCHITECTURE-v7.md)
-[![HF Card](https://img.shields.io/badge/HuggingFace-dataset%20card-yellow.svg)](huggingface/README.md)
+[![Evidence First](https://img.shields.io/badge/Evidence--First-fail--closed-success.svg)](SKILL.md)
+[![Architecture v8](https://img.shields.io/badge/Architecture-v8.0-blueviolet.svg)](docs/ARCHITECTURE-v8.md)
 
-Repositório operacional: https://github.com/ringuemkt-rgb/visao-tinker-bell
+## O que mudou na v8
 
-## O que a v7.0 adiciona
+A v7 já possuía PNCP/APIs, analytics, ACH, evidência, PDF e pipeline. A v8 acrescenta uma camada de controle pericial que impede o sistema de transformar sinais em conclusões fortes sem cumprir protocolo.
 
-| Peça | Função |
-|------|--------|
-| `lib/pipeline.py` | Orquestrador: entidade → fontes → red flags → grafo → ACH → dossiê |
-| `lib/ach.py` | Matriz Analysis of Competing Hypotheses (obrigatória) |
-| `lib/evidence.py` | Cadeia de custódia (URL, data, SHA-256, tier) |
-| `lib/pdf_extract.py` | Extração local de PDF (Docling → PyMuPDF → AIPDF opcional) |
-| `scripts/pericia_run.py` | CLI de perícia reproduzível |
-| `huggingface/` | Card para dataset/espaço de **processamento**, nunca evidência |
-
-## Princípios invioláveis
-
-1. Somente evidência pública e oficial.
-2. Multi-fonte (≥ 2 fontes independentes para claims materiais).
-3. Scores são sinais estatísticos, nunca sentença.
-4. ACH antes de qualquer conclusão.
-5. Cadeia de evidência reproduzível.
-6. Zero playbook de crime.
-7. Mesma régua para todos os partidos e cargos.
+- `vtb/runtime.py` — memória SQLite persistente por caso;
+- `vtb/state_machine.py` — fluxo investigativo obrigatório;
+- `vtb/claims.py` — Claim Ledger + independência de fontes;
+- `vtb/source_health.py` — 403/timeout/5xx nunca viram NOT_FOUND;
+- `vtb/hypotheses.py` — hipóteses concorrentes e falsificação;
+- `vtb/next_best_query.py` — busca orientada por ganho de informação;
+- `vtb/money_flow.py` — contratado ≠ empenhado ≠ liquidado ≠ pago;
+- `vtb/entity_resolution.py` — bloqueio de fusão precipitada de homônimos/empresas;
+- `vtb/legal.py` — Legal Validator + Dolo Gate estrutural;
+- `vtb/red_team.py` — ataque obrigatório à conclusão dominante;
+- `vtb/gates.py` — claims críticos sem prova são quarentenados;
+- `vtb/tool_registry.py` — TOOLCHECK S0–S10;
+- `schemas/` — contratos machine-readable;
+- `.github/workflows/ci.yml` — testes em Python 3.11/3.12.
 
 ## Início rápido
 
 ```bash
 git clone https://github.com/ringuemkt-rgb/visao-tinker-bell.git
 cd visao-tinker-bell
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+pip install -e '.[dev]'
 
-python scripts/run_red_flags_example.py
-python scripts/pericia_run.py --caso cases/itubera-reges/caso.yaml
+vtb --db data/vtb.sqlite3 mission-init itubera-001 "Auditoria Ituberá" "Quais fatos os documentos públicos sustentam?" --geography "Ituberá, Bahia"
+vtb --db data/vtb.sqlite3 mission-status itubera-001
+vtb source-health 403
+pytest
 ```
 
-Chaves opcionais:
+## Arquitetura
 
-```bash
-export PORTAL_TRANSPARENCIA_KEY="..."
-export AIPDF_API_KEY="..."
+```text
+Pergunta
+  → Escopo
+  → Entidades
+  → Hipóteses concorrentes
+  → Fontes primárias + source-health
+  → Provenance / cadeia
+  → Claim Ledger
+  → Timeline / money flow / grafo
+  → Contradição + falsificação
+  → Evidence gaps + Next-Best-Query
+  → Red Team
+  → Legal/Privacy/QA gates
+  → READY | READY_WITH_LIMITATIONS | INCONCLUSIVE | QUARANTINED
 ```
 
-## Pipeline estratégico
+## Fontes brasileiras
 
-```
-Escopo
-  → Resolução de entidade
-  → Coleta Tier 1 (TSE, PNCP, BrasilAPI, Transparência)
-  → Fallback HTML ético
-  → Extração de PDF local (Docling)
-  → Red flags + analytics
-  → Grafo pessoa–órgão–empresa–contrato
-  → ACH (H0/H1/H2/H3)
-  → Dossiê + apêndice
-```
+O mapa inicial inclui PNCP, Compras.gov.br, Transparência, TCU, CGU, TCE/TCM, MPs, TSE/TRE, DataJud/tribunais, SICONFI, CEIS/CNEP/CEPIM, diários oficiais, portais municipais/estaduais e registros empresariais legitimamente públicos. **Disponibilidade é medida por execução; não presumida pelo catálogo.** Veja `docs/SOURCE-MAP-BRAZIL.md`.
 
-## Stack open-source
+## Ferramentas
 
-| Camada | Ferramentas |
-|--------|-------------|
-| Fontes BR | TSE, PNCP, Transparência, BrasilAPI, CEIS/CNEP |
-| Regras | Monitor de Gravata adaptado + rules/red_flags.json |
-| Grafos | NetworkX, GraphML, PyVis, Gephi |
-| PDF local | Docling, PyMuPDF, AIPDF opcional |
-| HTML | requests → Scrapling |
-| Analytics | pandas, DuckDB |
-| HF | NER/layout — nunca fato |
+O catálogo contém Trafilatura, PyMuPDF, OCRmyPDF, Docling, DuckDB, NetworkX, OpenRefine, SpiderFoot e Gephi como componentes candidatos/auxiliares. Eles não entram automaticamente como “operacionais”: passam por TOOLCHECK e modelos/extratores nunca substituem a fonte original.
 
-Arquitetura: [docs/ARCHITECTURE-v7.md](docs/ARCHITECTURE-v7.md)
+## Regras invioláveis
 
-## Hugging Face
+1. Fonte primária primeiro.
+2. Claim material deve ter provenance e status explícito.
+3. Corroboração exige linhagens independentes.
+4. Red flags/HHI/Benford/outliers/grafos são triagem, não prova de fraude.
+5. Processo, representação ou cautelar não equivalem a condenação.
+6. Valor contratado não equivale a valor pago.
+7. Ausência em API só pode ser inferida em fonte saudável, escopo exaustivo e negativo explícito.
+8. Contraprova e Red Team são obrigatórios antes de conclusão sensível.
+9. Ferramenta só é marcada como executada se realmente executada.
+10. Revisão humana é exigida para imputações sensíveis.
 
-Card em `huggingface/README.md`. Nenhum modelo HF é fonte de fato.
+## Legado v7
+
+`lib/` e `scripts/pericia_run.py` continuam presentes durante a migração. A v8 nasce em `vtb/` para permitir adoção progressiva sem quebrar o pipeline existente.
+
+## Documentação
+
+- [Arquitetura v8](docs/ARCHITECTURE-v8.md)
+- [Metodologia](docs/METHODOLOGY.md)
+- [Mapa de fontes Brasil](docs/SOURCE-MAP-BRAZIL.md)
+- [Roadmap](docs/ROADMAP-v8.md)
+- [Skill canônica](SKILL.md)
+- [Segurança e uso responsável](SECURITY.md)
 
 ## Licença
 
-AGPL-3.0
+AGPL-3.0-only
