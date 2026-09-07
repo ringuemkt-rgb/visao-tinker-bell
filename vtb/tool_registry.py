@@ -49,11 +49,17 @@ class ToolRegistry:
         if tool_id not in self.tools:
             raise KeyError(tool_id)
         status = self.tools[tool_id].status
-        if status not in {ToolStatus.S4_TESTED, ToolStatus.S5_OPERATIONAL, ToolStatus.S6_OPERATIONAL_LIMITED, ToolStatus.S7_DEGRADED}:
+        allowed = {
+            ToolStatus.S4_TESTED,
+            ToolStatus.S5_OPERATIONAL,
+            ToolStatus.S6_OPERATIONAL_LIMITED,
+            ToolStatus.S7_DEGRADED,
+        }
+        if status not in allowed:
             raise RuntimeError(f"tool {tool_id} cannot be represented as executed from status {status}")
 
     @classmethod
-    def from_yaml(cls, path: str | Path) -> "ToolRegistry":
+    def from_yaml(cls, path: str | Path) -> ToolRegistry:
         data: dict[str, Any] = yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
         reg = cls()
         for item in data.get("tools", []):

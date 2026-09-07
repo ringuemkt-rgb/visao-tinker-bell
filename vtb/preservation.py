@@ -4,7 +4,7 @@ import hashlib
 import json
 import shutil
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 
@@ -33,14 +33,20 @@ class PreservationManifest:
     notes: str = ""
 
 
-def preserve_bytes(data: bytes, destination: str | Path, artifact_id: str, source_url: str, method: str = "direct-download") -> PreservationManifest:
+def preserve_bytes(
+    data: bytes,
+    destination: str | Path,
+    artifact_id: str,
+    source_url: str,
+    method: str = "direct-download",
+) -> PreservationManifest:
     path = Path(destination)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_bytes(data)
     return PreservationManifest(
         artifact_id=artifact_id,
         source_url=source_url,
-        retrieved_at=datetime.now(timezone.utc).isoformat(),
+        retrieved_at=datetime.now(UTC).isoformat(),
         file_path=str(path),
         sha256=sha256_bytes(data),
         byte_length=len(data),
@@ -49,7 +55,12 @@ def preserve_bytes(data: bytes, destination: str | Path, artifact_id: str, sourc
     )
 
 
-def copy_preserving_original(source: str | Path, destination: str | Path, artifact_id: str, source_url: str = "local-file") -> PreservationManifest:
+def copy_preserving_original(
+    source: str | Path,
+    destination: str | Path,
+    artifact_id: str,
+    source_url: str = "local-file",
+) -> PreservationManifest:
     src = Path(source)
     dst = Path(destination)
     dst.parent.mkdir(parents=True, exist_ok=True)
@@ -57,7 +68,7 @@ def copy_preserving_original(source: str | Path, destination: str | Path, artifa
     return PreservationManifest(
         artifact_id=artifact_id,
         source_url=source_url,
-        retrieved_at=datetime.now(timezone.utc).isoformat(),
+        retrieved_at=datetime.now(UTC).isoformat(),
         file_path=str(dst),
         sha256=sha256_file(dst),
         byte_length=dst.stat().st_size,

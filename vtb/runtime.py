@@ -5,8 +5,14 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from .models import Claim, EvidenceRecord, Hypothesis, MissionState, SourceRecord, utcnow
-
+from .models import (
+    Claim,
+    EvidenceRecord,
+    Hypothesis,
+    MissionState,
+    SourceRecord,
+    utcnow,
+)
 
 SCHEMA = """
 PRAGMA foreign_keys = ON;
@@ -86,10 +92,18 @@ class CaseStore:
     def close(self) -> None:
         self.db.close()
 
-    def create_mission(self, case_id: str, title: str, question: str, geography: str = "", time_range: str = "") -> None:
+    def create_mission(
+        self,
+        case_id: str,
+        title: str,
+        question: str,
+        geography: str = "",
+        time_range: str = "",
+    ) -> None:
         now = utcnow()
         self.db.execute(
-            "INSERT INTO missions(case_id,title,question,geography,time_range,state,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)",
+            "INSERT INTO missions(case_id,title,question,geography,time_range,state,created_at,updated_at) "
+            "VALUES(?,?,?,?,?,?,?,?)",
             (case_id, title, question, geography, time_range, MissionState.INTAKE, now, now),
         )
         self.db.commit()
@@ -101,13 +115,26 @@ class CaseStore:
         return dict(row)
 
     def set_state(self, case_id: str, state: MissionState) -> None:
-        self.db.execute("UPDATE missions SET state=?, updated_at=? WHERE case_id=?", (state, utcnow(), case_id))
+        self.db.execute(
+            "UPDATE missions SET state=?, updated_at=? WHERE case_id=?",
+            (state, utcnow(), case_id),
+        )
         self.db.commit()
 
-    def _upsert_payload(self, table: str, case_id: str, key_name: str, key: str, payload: dict[str, Any]) -> None:
+    def _upsert_payload(
+        self,
+        table: str,
+        case_id: str,
+        key_name: str,
+        key: str,
+        payload: dict[str, Any],
+    ) -> None:
         if table not in {"sources", "evidence", "claims", "hypotheses"}:
             raise ValueError("unsupported table")
-        sql = f"INSERT INTO {table}(case_id,{key_name},payload) VALUES(?,?,?) ON CONFLICT(case_id,{key_name}) DO UPDATE SET payload=excluded.payload"
+        sql = (
+            f"INSERT INTO {table}(case_id,{key_name},payload) VALUES(?,?,?) "
+            f"ON CONFLICT(case_id,{key_name}) DO UPDATE SET payload=excluded.payload"
+        )
         self.db.execute(sql, (case_id, key, json.dumps(payload, ensure_ascii=False, default=str)))
         self.db.commit()
 
@@ -121,18 +148,50 @@ class CaseStore:
         self._upsert_payload("claims", case_id, "claim_id", claim.claim_id, claim.to_dict())
 
     def add_hypothesis(self, case_id: str, hypothesis: Hypothesis) -> None:
-        self._upsert_payload("hypotheses", case_id, "hypothesis_id", hypothesis.hypothesis_id, hypothesis.to_dict())
+        self._upsert_payload(
+            "hypotheses",
+            case_id,
+            "hypothesis_id",
+            hypothesis.hypothesis_id,
+            hypothesis.to_dict(),
+        )
 
-    def log_search(self, case_id: str, query: str, source: str = "", result_class: str = "", source_health: str = "", notes: str = "") -> None:
+    def log_search(
+        self,
+        case_id: str,
+        query: str,
+        source: str = "",
+        result_class: str = "",
+        source_health: str = "",
+        notes: str = "",
+    ) -> None:
         self.db.execute(
-            "INSERT INTO searches(case_id,query,source,result_class,source_health,executed_at,notes) VALUES(?,?,?,?,?,?,?)",
+            "INSERT INTO searches(case_id,query,source,result_class,source_health,executed_at,notes) "
+            "VALUES(?,?,?,?,?,?,?)",
             (case_id, query, source, result_class, source_health, utcnow(), notes),
         )
         self.db.commit()
 
-    def log_tool_run(self, case_id: str, tool_id: str, status: str, input_data: Any = None, output_data: Any = None, error: str = "") -> None:
+    def log_tool_run(
+        self,
+        case_id: str,
+        tool_id: str,
+        status: str,
+        input_data: Any = None,
+        output_data: Any = None,
+        error: str = "",
+    ) -> None:
         self.db.execute(
-            "INSERT INTO tool_runs(case_id,tool_id,status,input_json,output_json,error,executed_at) VALUES(?,?,?,?,?,?,?)",
-            (case_id, tool_id, status, json.dumps(input_data, default=str), json.dumps(output_data, default=str), error, utcnow()),
+            "INSERT INTO tool_runs(case_id,tool_id,status,input_json,output_json,error,executed_at) "
+            "VALUES(?,?,?,?,?,?,?)",
+            (
+                case_id,
+                tool_id,
+                status,
+                json.dumps(input_data, default=str),
+                json.dumps(output_data, default=str),
+                error,
+                utcnow(),
+            ),
         )
         self.db.commit()

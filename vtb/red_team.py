@@ -1,7 +1,4 @@
-from __future__ import annotations
-
 from dataclasses import dataclass, field
-
 
 DEFAULT_CHECKS = [
     "HOMONYM_OR_ENTITY_COLLISION",
