@@ -1,0 +1,17 @@
+entity:
+  name: Reges Jonas Aragão Santos
+  role: Prefeito
+  municipality: Ituberá
+  uf: BA
+  party: null
+  cnpjs:
+    - "19888763000149"
+  notes: Caso de teste operacional.
+
+contracts:
+  - id: PE011
+    objeto: Serviços facilities secretarias e órgãos (12 meses)
+    valor: 15571248.0
+    cnpj: "19888763000149"
+    fonte: https://www.itubera.ba.gov.br/Site/Licitacao/121051?localConsulta=2
+    orgao_cnpj: "14195333000128"
