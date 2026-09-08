@@ -1,89 +1,112 @@
-# Visão Tinker Bell 🦊 v7.0
+# Visão Tinker Bell 🦊 — Supreme v8.0
 
-**Plataforma open-source de inteligência forense baseada em evidência pública.**  
-Cruzamento de contratos, CNPJ, sanções, patrimônio declarado, grafos e ACH — **somente dados públicos**.
+**Runtime open-source de inteligência forense evidence-first para auditoria cívica, contratações públicas e investigação documental de interesse público no Brasil.**
 
-> Mostramos os números. Não presumimos a origem. Documentamos a cadeia.
+> Encontrar não é provar. Correlação não é nexo. Red flag não é evidência. Fonte quebrada não é ausência.
 
-[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](LICENSE)
-[![Evidence-Only](https://img.shields.io/badge/Evidence-Only-green.svg)]()
-[![Arch v7](https://img.shields.io/badge/Architecture-v7.0-blueviolet.svg)](docs/ARCHITECTURE-v7.md)
-[![HF Card](https://img.shields.io/badge/HuggingFace-dataset%20card-yellow.svg)](huggingface/README.md)
+## Objetivo
 
-Repositório operacional: https://github.com/ringuemkt-rgb/visao-tinker-bell
+A VTB localiza e prioriza sinais objetivos em registros públicos, reconstrói fluxo financeiro e relacionamentos temporais, e preserva a cadeia de evidência. Ela é desenhada para responder: **o que os documentos demonstram, o que contradizem e qual evidência ainda falta?**
 
-## O que a v7.0 adiciona
+Nenhum detector retorna automaticamente `CORRUPTION`, `FRAUD`, `CARTEL`, `LARANJA` ou dolo. A saída padrão é `ANOMALY_FOR_VERIFICATION`, com método, evidence IDs, falso-positivo e explicações alternativas.
 
-| Peça | Função |
-|------|--------|
-| `lib/pipeline.py` | Orquestrador: entidade → fontes → red flags → grafo → ACH → dossiê |
-| `lib/ach.py` | Matriz Analysis of Competing Hypotheses (obrigatória) |
-| `lib/evidence.py` | Cadeia de custódia (URL, data, SHA-256, tier) |
-| `lib/pdf_extract.py` | Extração local de PDF (Docling → PyMuPDF → AIPDF opcional) |
-| `scripts/pericia_run.py` | CLI de perícia reproduzível |
-| `huggingface/` | Card para dataset/espaço de **processamento**, nunca evidência |
+## Motores v8
 
-## Princípios invioláveis
+- CaseStore SQLite + state machine;
+- Claim Ledger + source lineage;
+- Source Health + catálogo nacional de fontes;
+- preservação SHA-256 + manifestos;
+- ACH, falsificação, Contradiction/Red Team e Next-Best-Query;
+- procurement, payment e money-flow forensics;
+- corporate, electoral e asset forensics;
+- price intelligence, HHI e Benford com applicability gate;
+- evidence-backed graph + temporal graph;
+- timeline forensics + document version drift;
+- controle externo/judicial com estágio processual;
+- watchlists como candidate match;
+- coleta incremental/checkpoints;
+- linkage probabilístico com human-review gate;
+- Yente/OpenSanctions adapter como enrichment;
+- Tool Registry/TOOLCHECK S0–S10;
+- QA, Legal/Dolo e publication gates.
 
-1. Somente evidência pública e oficial.
-2. Multi-fonte (≥ 2 fontes independentes para claims materiais).
-3. Scores são sinais estatísticos, nunca sentença.
-4. ACH antes de qualquer conclusão.
-5. Cadeia de evidência reproduzível.
-6. Zero playbook de crime.
-7. Mesma régua para todos os partidos e cargos.
+## Arquitetura
+
+```text
+Pergunta
+ → Escopo + hipóteses concorrentes
+ → Plano de fontes
+ → Coleta incremental + source health
+ → Preservação / hash / provenance
+ → Entity resolution / linkage
+ → Claim Ledger
+ → Procurement / money / corporate / electoral
+ → Timeline / graph / price / statistics
+ → Controle externo / judicial
+ → Contradição + falsificação + gaps
+ → Red Team
+ → Legal / Privacy / QA
+ → READY | READY_WITH_LIMITATIONS | INCONCLUSIVE | QUARANTINED
+```
+
+## Cobertura Brasil
+
+`config/sources_br_v8.yaml` mapeia PNCP, Compras.gov, Transparência, TCU, CGU, CEIS/CNEP/CEPIM, SICONFI, Transferegov, TSE, Câmara/Senado, DataJud/tribunais, Receita/CNPJ, diários oficiais, TCE/TCM, MPs, juntas comerciais, SINAPI/SICRO, FNDE/FNS/SIOPS/SIOPE e fontes derivadas de enrichment.
+
+**Catálogo ≠ disponibilidade.** Toda missão mede a saúde da fonte; 403/timeout/5xx não viram `NOT_FOUND`.
+
+## Backends opcionais verificados no catálogo
+
+- **Aleph** — busca/navegação documental e de entidades;
+- **Splink** — record linkage probabilístico escalável;
+- **Timesketch** — timeline forense colaborativa;
+- **Yente/OpenSanctions** — matching/enrichment de entidades;
+- **Neo4j/Gephi/OpenRefine** — grafo e reconciliação quando aprovados no TOOLCHECK.
+
+Repositório encontrado não significa ferramenta instalada ou operacional. O status S0–S10 é atualizado somente após teste real.
 
 ## Início rápido
 
 ```bash
 git clone https://github.com/ringuemkt-rgb/visao-tinker-bell.git
 cd visao-tinker-bell
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+pip install -e '.[dev]'
 
-python scripts/run_red_flags_example.py
-python scripts/pericia_run.py --caso cases/itubera-reges/caso.yaml
+vtb --db data/vtb.sqlite3 mission-init caso-001 "Auditoria" "Quais fatos as fontes públicas sustentam?"
+vtb source-health 403
+pytest
 ```
 
-Chaves opcionais:
+## Documentação central
 
-```bash
-export PORTAL_TRANSPARENCIA_KEY="..."
-export AIPDF_API_KEY="..."
-```
+- `SKILL.md`
+- `docs/ANTI-CORRUPTION-ARCHITECTURE.md`
+- `docs/FULL-CYCLE-INTELLIGENCE.md`
+- `docs/DETECTION-CATALOG.md`
+- `docs/BRAZIL-DATA-LAYERS.md`
+- `docs/SOURCE-COVERAGE-v8.md`
+- `docs/ENTITY-MATCHING.md`
+- `docs/STATISTICAL-FORENSICS.md`
+- `docs/METHODOLOGY.md`
+- `docs/ROADMAP-v8.md`
 
-## Pipeline estratégico
+## Regras invioláveis
 
-```
-Escopo
-  → Resolução de entidade
-  → Coleta Tier 1 (TSE, PNCP, BrasilAPI, Transparência)
-  → Fallback HTML ético
-  → Extração de PDF local (Docling)
-  → Red flags + analytics
-  → Grafo pessoa–órgão–empresa–contrato
-  → ACH (H0/H1/H2/H3)
-  → Dossiê + apêndice
-```
-
-## Stack open-source
-
-| Camada | Ferramentas |
-|--------|-------------|
-| Fontes BR | TSE, PNCP, Transparência, BrasilAPI, CEIS/CNEP |
-| Regras | Monitor de Gravata adaptado + rules/red_flags.json |
-| Grafos | NetworkX, GraphML, PyVis, Gephi |
-| PDF local | Docling, PyMuPDF, AIPDF opcional |
-| HTML | requests → Scrapling |
-| Analytics | pandas, DuckDB |
-| HF | NER/layout — nunca fato |
-
-Arquitetura: [docs/ARCHITECTURE-v7.md](docs/ARCHITECTURE-v7.md)
-
-## Hugging Face
-
-Card em `huggingface/README.md`. Nenhum modelo HF é fonte de fato.
+1. Fonte primária primeiro.
+2. Red flag/anomalia/score não é prova de crime.
+3. Corroboração exige linhagens independentes.
+4. Contratado ≠ empenhado ≠ liquidado ≠ pago.
+5. Match nominal não fecha identidade.
+6. Probabilistic linkage não faz auto-merge sensível.
+7. Processo/cautelar/representação não equivalem a condenação.
+8. Benford/HHI/outliers/grafos são triagem.
+9. Contraprova e Red Team antes de conclusão sensível.
+10. Revisão humana para imputações sensíveis.
+11. Ferramenta só aparece como executada se realmente foi executada.
+12. Scores são prioridade de revisão, nunca probabilidade de culpa.
 
 ## Licença
 
-AGPL-3.0
+AGPL-3.0-only

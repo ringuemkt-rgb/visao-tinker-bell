@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://visao-tinker-bell.local/schemas/claim.schema.json",
+  "title": "VTB Claim",
+  "type": "object",
+  "required": ["claim_id", "statement", "status", "evidence_ids"],
+  "properties": {
+    "claim_id": {"type": "string", "minLength": 1},
+    "statement": {"type": "string", "minLength": 1},
+    "status": {"enum": ["VERIFIED_PRIMARY", "VERIFIED_CORROBORATED", "PARTIALLY_SUPPORTED", "UNVERIFIED", "CONTRADICTED", "SUPERSEDED", "REJECTED", "INFERENCE", "ESTIMATE", "NOT_DEMONSTRATED", "NOT_APPLICABLE", "DOCUMENT_CONFLICT", "ENTITY_MATCH_UNCERTAIN", "EVIDENCE_GAP", "LEGAL_VALIDATION_REQUIRED", "REPRODUCIBILITY_WARNING"]},
+    "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "contradicting_evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "critical": {"type": "boolean"},
+    "legal_sensitive": {"type": "boolean"},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

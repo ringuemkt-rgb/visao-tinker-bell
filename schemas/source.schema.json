@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://visao-tinker-bell.local/schemas/source.schema.json",
+  "title": "VTB Source",
+  "type": "object",
+  "required": ["source_id", "title", "issuer", "url", "quality", "health", "retrieved_at"],
+  "properties": {
+    "source_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string"},
+    "issuer": {"type": "string"},
+    "url": {"type": "string"},
+    "quality": {"type": "string", "pattern": "^S[0-6]_"},
+    "health": {"enum": ["HEALTHY", "PARTIAL", "DEGRADED", "BLOCKED", "TIMEOUT", "CONNECTION_ERROR", "AUTH_REQUIRED", "RATE_LIMITED", "UNKNOWN"]},
+    "retrieved_at": {"type": "string"},
+    "original_source_id": {"type": ["string", "null"]},
+    "parent_source_id": {"type": ["string", "null"]},
+    "sha256": {"type": ["string", "null"]},
+    "query_parameters": {"type": "object"}
+  },
+  "additionalProperties": true
+}

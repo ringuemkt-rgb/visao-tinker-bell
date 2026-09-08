@@ -1,0 +1,116 @@
+# VISÃO TINKER BELL — candidate tool registry.
+# IMPORTANT: repository/service availability is not execution. Every tool must pass TOOLCHECK before S4+.
+tools:
+  - tool_id: trafilatura
+    name: Trafilatura
+    category: web_text_extraction
+    repository: https://github.com/adbar/trafilatura
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Extraction output must be checked against the original page/document"]
+  - tool_id: pymupdf
+    name: PyMuPDF
+    category: document_parsing
+    repository: https://github.com/pymupdf/PyMuPDF
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Parser output does not replace visual/document inspection"]
+  - tool_id: ocrmypdf
+    name: OCRmyPDF
+    category: ocr_fallback
+    repository: https://github.com/ocrmypdf/OCRmyPDF
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["OCR is fallback; transcription may contain errors"]
+  - tool_id: docling
+    name: Docling
+    category: document_understanding
+    repository: https://github.com/docling-project/docling
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Model/parser output is never a source of fact"]
+  - tool_id: duckdb
+    name: DuckDB
+    category: analytics
+    repository: https://github.com/duckdb/duckdb
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: networkx
+    name: NetworkX
+    category: graph_analytics
+    repository: https://github.com/networkx/networkx
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: openrefine
+    name: OpenRefine
+    category: reconciliation
+    repository: https://github.com/OpenRefine/OpenRefine
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: neo4j
+    name: Neo4j
+    category: graph_database
+    repository: https://github.com/neo4j/neo4j
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Optional backend; graph edges still require evidence lineage"]
+  - tool_id: gephi
+    name: Gephi
+    category: graph_visualization
+    repository: https://github.com/gephi/gephi
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+  - tool_id: aleph
+    name: Aleph
+    category: investigative_document_search
+    repository: https://github.com/alephdata/aleph
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Use only datasets/collections lawfully accessible to the operator", "Cross-reference results are leads until primary-source validation"]
+  - tool_id: spiderfoot
+    name: SpiderFoot
+    category: osint_automation
+    repository: https://github.com/smicallef/spiderfoot
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Public sources and legitimate purpose only", "Automated correlations are leads"]
+  - tool_id: wayback-machine-downloader
+    name: Wayback Machine Downloader
+    category: historical_web_preservation
+    repository: https://github.com/hartator/wayback-machine-downloader
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Archived page removal/change does not establish concealment", "Functional status must be tested before case use"]
+  - tool_id: yt-dlp
+    name: yt-dlp
+    category: public_media_preservation
+    repository: https://github.com/yt-dlp/yt-dlp
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["Only public/lawfully accessible media", "Respect platform terms and copyright"]
+  - tool_id: gallery-dl
+    name: gallery-dl
+    category: public_media_preservation
+    repository: https://github.com/mikf/gallery-dl
+    status: S1_REPOSITORY_FOUND
+    public_only: true
+    limitations: ["No credential/cookie harvesting", "Use only public/lawfully accessible content", "Site adapters may break and require per-case TOOLCHECK"]
+
+optional_non_core:
+  - name: Maltego
+    classification: commercial_or_community_edition
+    rule: "Optional visualization/correlation; never source of fact"
+  - name: Linkurious
+    classification: commercial_optional
+    rule: "Optional graph UI; evidence remains in VTB ledger"
+  - name: yEd
+    classification: visualization_optional
+    rule: "Manual graph presentation only"
+
+blocked_automation:
+  - category: breach_lookup_for_personal_targeting
+    reason: "Not part of default civic-audit workflow; privacy/necessity and lawful-access review required"
+  - category: private_pattern_of_life_tracking
+    reason: "Prohibited as a default investigative capability"
+  - category: credentialed_social_scraping
+    reason: "Do not collect cookies/passwords or bypass access controls"

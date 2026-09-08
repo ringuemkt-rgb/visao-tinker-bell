@@ -1,0 +1,210 @@
+version: 8.0.0
+sources:
+  - id: pncp
+    name: Portal Nacional de Contratações Públicas
+    authority: A
+    level: federal
+    primary: true
+    domains: [procurement, contracts]
+  - id: comprasgov
+    name: Compras.gov.br
+    authority: A
+    level: federal
+    primary: true
+    domains: [procurement, contracts, price]
+  - id: transparencia_uniao
+    name: Portal da Transparência da União
+    authority: A
+    level: federal
+    primary: true
+    domains: [payments, transfers, budget, sanctions]
+  - id: tcu
+    name: Tribunal de Contas da União
+    authority: A
+    level: federal
+    primary: true
+    domains: [control, procurement, contracts, judicial]
+  - id: cgu
+    name: Controladoria-Geral da União
+    authority: A
+    level: federal
+    primary: true
+    domains: [control, sanctions, procurement]
+  - id: ceis
+    name: Cadastro Nacional de Empresas Inidôneas e Suspensas
+    authority: A
+    level: federal
+    primary: true
+    domains: [sanctions, corporate]
+  - id: cnep
+    name: Cadastro Nacional de Empresas Punidas
+    authority: A
+    level: federal
+    primary: true
+    domains: [sanctions, corporate]
+  - id: cepim
+    name: Cadastro de Entidades Privadas Sem Fins Lucrativos Impedidas
+    authority: A
+    level: federal
+    primary: true
+    domains: [sanctions, corporate, transfers]
+  - id: siconfi
+    name: SICONFI Tesouro Nacional
+    authority: A
+    level: federal
+    primary: true
+    domains: [budget, payments]
+  - id: transferegov
+    name: Transferegov.br
+    authority: A
+    level: federal
+    primary: true
+    domains: [transfers, contracts]
+  - id: tse
+    name: TSE Dados Abertos e DivulgaCandContas
+    authority: A
+    level: federal
+    primary: true
+    domains: [electoral, assets]
+  - id: camara_dados
+    name: Câmara dos Deputados Dados Abertos
+    authority: A
+    level: federal
+    primary: true
+    domains: [legislative, payments, electoral]
+  - id: senado_dados
+    name: Senado Federal Dados Abertos
+    authority: A
+    level: federal
+    primary: true
+    domains: [legislative, payments]
+  - id: datajud
+    name: CNJ DataJud
+    authority: A
+    level: federal
+    primary: false
+    domains: [judicial, control]
+    notes: Discovery/indexação; decisão deve ser verificada no tribunal competente quando material.
+  - id: stf
+    name: Supremo Tribunal Federal
+    authority: A
+    level: federal
+    primary: true
+    domains: [judicial]
+  - id: stj
+    name: Superior Tribunal de Justiça
+    authority: A
+    level: federal
+    primary: true
+    domains: [judicial]
+  - id: receita_cnpj
+    name: Receita Federal - CNPJ/dados públicos legítimos
+    authority: A
+    level: federal
+    primary: true
+    domains: [corporate]
+  - id: in_dou
+    name: Imprensa Nacional - Diário Oficial da União
+    authority: A
+    level: federal
+    primary: true
+    domains: [procurement, contracts, legislative, control]
+  - id: tce_tcm
+    name: Tribunais de Contas Estaduais e Municipais
+    authority: A
+    level: state_local
+    primary: true
+    domains: [control, procurement, contracts, payments, budget]
+  - id: mp_estadual
+    name: Ministérios Públicos Estaduais
+    authority: A
+    level: state_local
+    primary: true
+    domains: [control, judicial]
+  - id: tj
+    name: Tribunais de Justiça
+    authority: A
+    level: state_local
+    primary: true
+    domains: [judicial]
+  - id: diarios_estaduais_municipais
+    name: Diários Oficiais estaduais e municipais
+    authority: A
+    level: state_local
+    primary: true
+    domains: [procurement, contracts, payments, legislative, control]
+  - id: transparencia_local
+    name: Portais de Transparência estaduais e municipais
+    authority: A
+    level: state_local
+    primary: true
+    domains: [payments, budget, procurement, contracts]
+  - id: juntas_comerciais
+    name: Juntas Comerciais - acesso público legítimo conforme UF
+    authority: A
+    level: state_local
+    primary: true
+    domains: [corporate]
+  - id: sapl
+    name: SAPL quando adotado pela casa legislativa
+    authority: A
+    level: state_local
+    primary: true
+    domains: [legislative]
+  - id: sinapi
+    name: SINAPI
+    authority: A
+    level: federal
+    primary: true
+    domains: [price]
+  - id: sicro
+    name: SICRO
+    authority: A
+    level: federal
+    primary: true
+    domains: [price]
+  - id: fnde
+    name: FNDE - dados e transferências públicas
+    authority: A
+    level: federal
+    primary: true
+    domains: [transfers, payments, contracts]
+  - id: fns
+    name: Fundo Nacional de Saúde
+    authority: A
+    level: federal
+    primary: true
+    domains: [transfers, payments]
+  - id: siops
+    name: SIOPS
+    authority: A
+    level: federal
+    primary: true
+    domains: [budget]
+  - id: siope
+    name: SIOPE
+    authority: A
+    level: federal
+    primary: true
+    domains: [budget]
+  - id: opensanctions
+    name: OpenSanctions
+    authority: C
+    level: international
+    primary: false
+    domains: [pep, sanctions, corporate]
+    notes: Enriquecimento/lead; validar identidade e fonte/lista original.
+  - id: aleph
+    name: Aleph/OCCRP
+    authority: C
+    level: international
+    primary: false
+    domains: [corporate, judicial, control]
+    notes: Descoberta/documentos; não substitui fonte originária.
+  - id: querido_diario
+    name: Querido Diário
+    authority: C
+    level: state_local
+    primary: false
+    domains: [procurement, contracts, legislative, control]
+    notes: Índice/extração; conferir publicação oficial material.

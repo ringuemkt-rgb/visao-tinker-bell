@@ -1,0 +1,38 @@
+version: 8.0.0
+policy:
+  read_only: true
+  secrets_in_repository: false
+  source_health_required: true
+  zero_result_is_not_absence: true
+adapters:
+  pncp:
+    class: vtb.adapters.pncp.PNCPAdapter
+    base_url: https://pncp.gov.br/api/pncp
+    authority: A
+    documentation: https://pncp.gov.br/manual/pt-br/latest/
+    operations:
+      - get_contract
+      - contract_documents
+      - contracts_for_procurement
+      - procurement_items
+      - procurement_history
+      - contract_history
+  portal_transparencia:
+    class: vtb.adapters.transparency.PortalTransparenciaAdapter
+    base_url: https://api.portaldatransparencia.gov.br
+    authority: A
+    authentication: chave-api-dados
+    secret_env_hint: PORTAL_TRANSPARENCIA_API_KEY
+    operations:
+      - ceis
+      - cnep
+      - cepim
+  tse_open_data:
+    class: vtb.adapters.tse_open_data.TSEOpenDataAdapter
+    base_url: https://dadosabertos.tse.jus.br
+    authority: A
+    dataset_pattern: candidatos-{year}
+    operations:
+      - package_show
+      - candidate_resources
+      - find_candidate_resource
