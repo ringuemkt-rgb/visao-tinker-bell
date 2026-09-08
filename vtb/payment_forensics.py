@@ -73,7 +73,7 @@ def orphan_payment_signals(payments: list[PaymentRecord]) -> list[RiskSignal]:
 
 
 def summarize_supplier_payments(payments: list[PaymentRecord]) -> dict[str, Decimal]:
-    totals: dict[str, Decimal] = defaultdict(lambda: Decimal("0"))
+    totals: dict[str, Decimal] = defaultdict(lambda: Decimal(0))
     for row in payments:
         totals[row.supplier_id] += row.amount
     return dict(totals)

@@ -18,9 +18,7 @@ class TemporalEdge:
     def active_on(self, when: date) -> bool:
         if self.valid_from and when < self.valid_from:
             return False
-        if self.valid_to and when > self.valid_to:
-            return False
-        return True
+        return not (self.valid_to and when > self.valid_to)
 
 
 class TemporalEvidenceGraph:

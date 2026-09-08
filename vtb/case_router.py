@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .source_catalog import SourceCatalog, SourceSpec
-
+from .source_catalog import (
+    SourceCatalog,
+    SourceSpec,
+)
 
 MODE_DOMAINS = {
     "PROCUREMENT": ("procurement", "contracts", "price"),
