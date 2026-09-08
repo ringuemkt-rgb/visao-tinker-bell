@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field
 
+from .ids import stable_id
 from .signals import RiskSignal, SignalCategory, SignalSeverity
 
 
@@ -48,7 +49,7 @@ def shared_attribute_signals(companies: list[CompanyProfile]) -> list[RiskSignal
             evidence_ids = sorted({e for cid in company_ids for e in evidence_by_company[cid]})
             signals.append(
                 RiskSignal(
-                    signal_id=f"CORP-SHARED-{kind.upper()}-{abs(hash((kind, value))) % 10**10}",
+                    signal_id=stable_id("CORP-SHARED", kind, value),
                     category=SignalCategory.CORPORATE,
                     title=f"Atributo cadastral compartilhado: {kind}",
                     description=f"{len(company_ids)} empresas compartilham o mesmo atributo no dataset.",

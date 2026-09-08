@@ -1,0 +1,22 @@
+version: 8.0.0
+rules:
+  name_only_match_is_identity_proof: false
+  enrichment_match_requires_independent_validation: true
+  sensitive_match_requires_primary_source: true
+  minimum_identifiers_for_high_confidence_review: 2
+recommended_person_identifiers:
+  - name
+  - birthDate
+  - nationality_or_country
+  - public_identifier_when_legitimate
+recommended_company_identifiers:
+  - legal_name
+  - registration_number
+  - jurisdiction
+  - incorporation_date
+  - address
+adapters:
+  yente:
+    endpoint_pattern: /match/{dataset}
+    role: candidate_matching
+    result_semantics: LEAD_ONLY_UNTIL_RESOLVED

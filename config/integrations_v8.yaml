@@ -1,5 +1,5 @@
 version: 8.0.0
-policy: third_party_is_enrichment_not_ground_truth
+policy: third_party_is_enrichment_or_backend_not_ground_truth
 integrations:
   - id: receita_cnpj_open_data
     role: primary_or_official_structured_when_from_RFB
@@ -7,38 +7,59 @@ integrations:
     notes: Preferir dados abertos/consulta legítima da Receita e preservar versão/competência.
   - id: minha_receita
     repository: cuducos/minha-receita
-    role: derivative_bridge
-    status: S9_DISCONTINUED_OR_ARCHIVED
-    notes: Repositório GitHub arquivado; não usar como dependência estratégica primária.
+    role: historical_reference_or_derivative_bridge
+    status: S9_DISCONTINUED_OR_MOVED
+    notes: README GitHub informa migração para Codeberg; não usar o GitHub arquivado como dependência estratégica.
   - id: serenata_de_amor
     repository: okfn-brasil/serenata-de-amor
     role: methodology_reference
     status: S6_OPERATIONAL_WITH_LIMITATIONS
-    notes: Referência de civic-tech/anomalias; upstream informa atualizações pouco frequentes.
+    notes: Referência de civic-tech/anomalias; upstream informa atualizações menos frequentes.
   - id: opensanctions
     repository: opensanctions/opensanctions
     role: enrichment_pep_sanctions
     status: S1_REPOSITORY_FOUND
-    notes: Exige TOOLCHECK e reconciliação com fonte oficial antes de claim sensível.
+    notes: Match é lead; validar identidade e fonte/lista original.
+  - id: yente
+    repository: opensanctions/yente
+    role: probabilistic_entity_matching_backend
+    status: S1_REPOSITORY_FOUND
+    notes: API /match/{dataset}; self-host exige backend de busca conforme upstream. TOOLCHECK antes de produção.
+  - id: aleph
+    repository: alephdata/aleph
+    role: optional_document_entity_backend
+    status: S1_REPOSITORY_FOUND
+    notes: Busca/navegação de documentos e entidades; integração API deve ser versionada e testada.
+  - id: splink
+    repository: moj-analytical-services/splink
+    role: optional_probabilistic_record_linkage
+    status: S1_REPOSITORY_FOUND
+    notes: Nunca auto-merge identidade sensível; calibrar e revisar falso match/missed match.
+  - id: timesketch
+    repository: google/timesketch
+    role: optional_collaborative_timeline_backend
+    status: S1_REPOSITORY_FOUND
   - id: networkx
     repository: networkx/networkx
     role: graph_analytics
     status: S5_OPERATIONAL
-    notes: Dependência runtime já exercitada pelo CI do projeto.
+    notes: Dependência runtime exercitada pelo CI do projeto.
   - id: neo4j
     role: optional_graph_backend
     status: S1_REPOSITORY_FOUND
   - id: openrefine
     role: optional_entity_reconciliation
     status: S1_REPOSITORY_FOUND
-  - id: timesketch
-    role: optional_timeline_analysis
-    status: S1_REPOSITORY_FOUND
   - id: spiderfoot
     role: optional_osint_discovery
     status: S1_REPOSITORY_FOUND
+  - id: airflow_or_prefect
+    role: optional_scheduler
+    status: S0_NOT_EVALUATED
+    notes: Selecionar após avaliação operacional; núcleo VTB permanece scheduler-agnostic.
 rules:
   tool_execution_must_be_logged: true
   repository_found_is_not_operational: true
   enrichment_match_is_not_identity_proof: true
   sensitive_match_requires_primary_source: true
+  probabilistic_match_never_auto_merges_sensitive_identity: true
