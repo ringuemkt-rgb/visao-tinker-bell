@@ -30,6 +30,10 @@ Nenhum detector retorna automaticamente `CORRUPTION`, `FRAUD`, `CARTEL`, `LARANJ
 - Tool Registry/TOOLCHECK S0–S10;
 - QA, Legal/Dolo e publication gates.
 
+## Servidor MCP interoperável
+
+O runtime inclui um servidor MCP para conexão com clientes de IA compatíveis. Instale com `pip install -e '.[mcp]'` e execute `VTB_DB=data/vtb.sqlite3 vtb-mcp`. O transporte padrão é `stdio`; para HTTP controlado, use `VTB_MCP_TRANSPORT=streamable-http` atrás de autenticação, TLS e autorização. As ferramentas expostas são documentadas em [`docs/MCP-SERVER.md`](docs/MCP-SERVER.md).
+
 ## Arquitetura
 
 ```text
