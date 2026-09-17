@@ -67,8 +67,13 @@ O endpoint e os requisitos exatos de autenticação dependem da versão do SDK e
 | `manifest_verify` | Verifica SHA-256 e tamanho de artefatos preservados. |
 | `evaluate_red_flags` | Executa regras locais determinísticas como sinais para verificação. |
 | `triage_signals` | Calcula prioridade de revisão, nunca probabilidade de culpa. |
+| `red_flag_catalog` | Lista regras declarativas, campos exigidos e estado de implementação. |
+| `next_best_queries` | Prioriza consultas candidatas por ganho informacional e custo. |
+| `preserve_navigation_snapshot` | Preserva conteúdo fornecido pelo cliente com URL e SHA-256; não navega na internet. |
 
 O servidor não expõe uma ferramenta genérica de requisição HTTP ou execução de código. Novos conectores devem ser adicionados como adapters explicitamente revisados, com timeout, rate limit, schema, preservação, proveniência e testes.
+
+`preserve_navigation_snapshot` é deliberadamente passiva: a IA ou o cliente deve fornecer o conteúdo que já obteve de forma autorizada. O Tinker Bell grava o conteúdo, calcula hash e cria manifesto, mas não visita URLs nem tenta contornar bloqueios.
 
 ## Exemplo de fluxo com uma IA
 

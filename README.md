@@ -34,6 +34,8 @@ Nenhum detector retorna automaticamente `CORRUPTION`, `FRAUD`, `CARTEL`, `LARANJ
 
 O runtime inclui um servidor MCP para conexão com clientes de IA compatíveis. Instale com `pip install -e '.[mcp]'` e execute `VTB_DB=data/vtb.sqlite3 vtb-mcp`. O transporte padrão é `stdio`; para HTTP controlado, use `VTB_MCP_TRANSPORT=streamable-http` atrás de autenticação, TLS e autorização. As ferramentas expostas são documentadas em [`docs/MCP-SERVER.md`](docs/MCP-SERVER.md).
 
+O plano de evolução dessas integrações está em [`docs/ROADMAP-MCP-INTELLIGENCE.md`](docs/ROADMAP-MCP-INTELLIGENCE.md). Componentes invasivos, execução arbitrária e coleta indiscriminada permanecem fora do núcleo.
+
 ## Arquitetura
 
 ```text
