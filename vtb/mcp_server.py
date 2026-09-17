@@ -168,6 +168,13 @@ def red_flag_catalog() -> str:
 
 
 @mcp.tool()
+def forensic_report_contract() -> str:
+    """Retorna o schema do relatório pericial VTB para geração estruturada por uma IA."""
+    path = Path(__file__).parent.parent / "schemas" / "forensic_report.schema.json"
+    return path.read_text(encoding="utf-8")
+
+
+@mcp.tool()
 def next_best_queries(candidates: list[dict[str, Any]]) -> str:
     """Classifica consultas candidatas por ganho informacional, materialidade e fonte primária."""
     parsed = [

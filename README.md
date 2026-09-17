@@ -36,6 +36,8 @@ O runtime inclui um servidor MCP para conexão com clientes de IA compatíveis. 
 
 O plano de evolução dessas integrações está em [`docs/ROADMAP-MCP-INTELLIGENCE.md`](docs/ROADMAP-MCP-INTELLIGENCE.md). Componentes invasivos, execução arbitrária e coleta indiscriminada permanecem fora do núcleo.
 
+Relatórios estruturados devem seguir [`docs/FORENSIC-REPORT-STANDARD.md`](docs/FORENSIC-REPORT-STANDARD.md) e o contrato [`schemas/forensic_report.schema.json`](schemas/forensic_report.schema.json). Dossiês reais com dados pessoais não devem ser versionados no repositório.
+
 ## Arquitetura
 
 ```text

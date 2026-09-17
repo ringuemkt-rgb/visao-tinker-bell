@@ -70,6 +70,7 @@ O endpoint e os requisitos exatos de autenticação dependem da versão do SDK e
 | `evaluate_red_flags` | Executa regras locais determinísticas como sinais para verificação. |
 | `triage_signals` | Calcula prioridade de revisão, nunca probabilidade de culpa. |
 | `red_flag_catalog` | Lista regras declarativas, campos exigidos e estado de implementação. |
+| `forensic_report_contract` | Retorna o schema estruturado para geração de relatórios evidence-first. |
 | `next_best_queries` | Prioriza consultas candidatas por ganho informacional e custo. |
 | `preserve_navigation_snapshot` | Preserva conteúdo fornecido pelo cliente com URL e SHA-256; não navega na internet. |
 
