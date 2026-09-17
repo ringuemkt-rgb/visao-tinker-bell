@@ -7,6 +7,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
+from .case_bundle import verify_case_bundle, write_case_bundle
 from .models import MissionState
 from .next_best_query import QueryCandidate, rank_queries
 from .preservation import preserve_bytes, verify_manifest, write_manifest
@@ -97,6 +98,24 @@ def case_export(case_id: str) -> str:
         return _json(store.export_case(case_id))
     finally:
         store.close()
+
+
+@mcp.tool()
+def case_bundle(case_id: str, destination: str) -> str:
+    """Cria um pacote de caso versionável por Git com case.json e manifesto SHA-256."""
+    store = _store()
+    try:
+        bundle = write_case_bundle(store, case_id, destination)
+        return _json({"case_id": case_id, "bundle": str(bundle), "format": "vtb-case-bundle-v1"})
+    finally:
+        store.close()
+
+
+@mcp.tool()
+def case_bundle_verify(bundle_path: str) -> str:
+    """Verifica arquivos e hashes de um pacote de caso versionável."""
+    valid, reasons = verify_case_bundle(bundle_path)
+    return _json({"valid": valid, "reasons": reasons, "bundle": bundle_path})
 
 
 @mcp.tool()

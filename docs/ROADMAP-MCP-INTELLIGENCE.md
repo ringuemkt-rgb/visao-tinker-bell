@@ -10,7 +10,7 @@ O servidor MCP agora expõe o catálogo de red flags declarativas, a priorizaç�
 
 ### Lote 1 — Pacote de caso versionável
 
-Criar um comando para exportar um pacote de caso contendo manifesto, dados normalizados, Claim Ledger, auditoria e relatório. O pacote pode ser versionado em Git para revisão por pares, Pull Requests e rollback. O Git será uma camada editorial e de revisão; a cadeia de custódia primária continuará dependente de manifestos, hashes, armazenamento append-only e controles de acesso.
+**Implementado nesta atualização:** `case-bundle` e `case_bundle` geram um pacote `vtb-case-bundle-v1` com `case.json`, manifesto SHA-256, tamanho dos arquivos e nota de governança. `case-bundle-verify` e `case_bundle_verify` detectam arquivos ausentes, adulteração e divergência de tamanho. O pacote pode ser versionado em Git para revisão por pares, Pull Requests e rollback. O Git é uma camada editorial e de revisão; a cadeia de custódia primária continua dependente de manifestos, hashes, armazenamento append-only e controles de acesso.
 
 ### Lote 2 — Interface investigativa
 

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from . import __version__
+from .case_bundle import verify_case_bundle, write_case_bundle
 from .models import MissionState
 from .preservation import verify_manifest
 from .runtime import CaseStore
@@ -50,6 +51,22 @@ def cmd_export(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_bundle(args: argparse.Namespace) -> int:
+    store = CaseStore(args.db)
+    try:
+        bundle = write_case_bundle(store, args.case_id, args.output)
+        print(json.dumps({"case_id": args.case_id, "bundle": str(bundle)}, ensure_ascii=False, indent=2))
+    finally:
+        store.close()
+    return 0
+
+
+def cmd_bundle_verify(args: argparse.Namespace) -> int:
+    valid, reasons = verify_case_bundle(args.bundle)
+    print(json.dumps({"valid": valid, "reasons": reasons, "bundle": args.bundle}, ensure_ascii=False, indent=2))
+    return 0 if valid else 1
+
+
 def cmd_verify_manifest(args: argparse.Namespace) -> int:
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
     valid, reasons = verify_manifest(manifest)
@@ -76,6 +93,10 @@ def build_parser() -> argparse.ArgumentParser:
     move.add_argument("case_id"); move.add_argument("state", choices=[state.value for state in MissionState]); move.set_defaults(func=cmd_transition)
     export = sub.add_parser("case-export", help="Export a reproducible JSON snapshot of a case")
     export.add_argument("case_id"); export.add_argument("output"); export.set_defaults(func=cmd_export)
+    bundle = sub.add_parser("case-bundle", help="Create a Git-friendly case package with hash manifest")
+    bundle.add_argument("case_id"); bundle.add_argument("output"); bundle.set_defaults(func=cmd_bundle)
+    bundle_verify = sub.add_parser("case-bundle-verify", help="Verify a case package manifest")
+    bundle_verify.add_argument("bundle"); bundle_verify.set_defaults(func=cmd_bundle_verify)
     verify = sub.add_parser("manifest-verify", help="Verify an artifact against its SHA-256 manifest")
     verify.add_argument("manifest"); verify.set_defaults(func=cmd_verify_manifest)
     health = sub.add_parser("source-health"); health.add_argument("http_status", type=int); health.set_defaults(func=cmd_health)

@@ -63,6 +63,8 @@ O endpoint e os requisitos exatos de autenticação dependem da versão do SDK e
 | `mission_status` | Consulta o estado do caso. |
 | `mission_transition` | Avança somente por transição válida. |
 | `case_export` | Exporta missão, fontes, evidências, buscas, ferramentas e auditoria. |
+| `case_bundle` | Cria um pacote `vtb-case-bundle-v1` com JSON determinístico e manifesto SHA-256. |
+| `case_bundle_verify` | Verifica o manifesto e detecta adulteração do pacote. |
 | `case_audit` | Lista eventos append-only do caso. |
 | `manifest_verify` | Verifica SHA-256 e tamanho de artefatos preservados. |
 | `evaluate_red_flags` | Executa regras locais determinísticas como sinais para verificação. |
