@@ -1,0 +1,72 @@
+[
+  {
+    "id": "despesa-desproporcional",
+    "nome": "Despesa acima de 5 vezes a mediana da categoria",
+    "categoria": "eleitoral",
+    "descricao": "Valor muito acima da mediana da mesma rubrica. Sinal de leitura, nao de sobrepreco.",
+    "fonte": "padrao publico de prestacao de contas TSE",
+    "dados_necessarios": ["valor", "mediana_categoria"],
+    "apis": ["tse-dados-abertos"],
+    "severidade": "media",
+    "logica": "valor / mediana >= 5",
+    "implementada": true,
+    "adaptado_por": "Visao Tinker Bell",
+    "label": "ANOMALY_FOR_VERIFICATION"
+  },
+  {
+    "id": "candidato-socio-fornecedor",
+    "nome": "Documento do candidato igual ao de socio do fornecedor",
+    "categoria": "eleitoral",
+    "descricao": "So fecha com documento identico. Sobrenome igual nao entra nesta regra.",
+    "fonte": "TSE + QSA publico",
+    "dados_necessarios": ["documento_igual"],
+    "apis": ["tse-dados-abertos", "brasilapi-cnpj"],
+    "severidade": "alta",
+    "logica": "documento_igual == true",
+    "implementada": true,
+    "adaptado_por": "Visao Tinker Bell",
+    "label": "ANOMALY_FOR_VERIFICATION"
+  },
+  {
+    "id": "fluxo-circular",
+    "nome": "Ciclo curto doador, candidato e fornecedor",
+    "categoria": "eleitoral",
+    "descricao": "Ciclo de tres pontas acima de R$ 10 mil. Pode ser coligacao ou reembolso.",
+    "fonte": "prestacao de contas TSE",
+    "dados_necessarios": ["ciclo_valor"],
+    "apis": ["tse-dados-abertos"],
+    "severidade": "media",
+    "logica": "ciclo_valor >= 10000",
+    "implementada": true,
+    "adaptado_por": "Visao Tinker Bell",
+    "label": "ANOMALY_FOR_VERIFICATION"
+  },
+  {
+    "id": "score-contratacao-fila",
+    "nome": "Fila de leitura de contratacao com score >= 50",
+    "categoria": "contratacao",
+    "descricao": "Soma de preco, relacao, objeto, estrutura e sancao, teto 100. Nao e risco provado.",
+    "fonte": "eixos publicos de licitacao",
+    "dados_necessarios": ["score_contratacao"],
+    "apis": ["pncp-consulta-v1"],
+    "severidade": "media",
+    "logica": "score_contratacao >= 50",
+    "implementada": true,
+    "adaptado_por": "Visao Tinker Bell",
+    "label": "ANOMALY_FOR_VERIFICATION"
+  },
+  {
+    "id": "sobrenome-homonimo",
+    "nome": "Sobrenome igual sem documento",
+    "categoria": "entidade",
+    "descricao": "Homonimo. Nao cria aresta.",
+    "fonte": "gate de entidade",
+    "dados_necessarios": ["sobrenome_igual"],
+    "apis": [],
+    "severidade": "baixa",
+    "logica": "sobrenome_igual == true && documento_igual != true",
+    "implementada": true,
+    "adaptado_por": "Visao Tinker Bell",
+    "label": "ANOMALY_FOR_VERIFICATION"
+  }
+]
