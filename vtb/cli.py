@@ -6,8 +6,10 @@ from pathlib import Path
 
 from . import __version__
 from .case_bundle import verify_case_bundle, write_case_bundle
+from .ftm_export import dump as dump_ftm
 from .models import MissionState
 from .preservation import verify_manifest
+from .representacao import write_packet
 from .runtime import CaseStore
 from .source_health import classify_http_status, negative_result_label
 
@@ -80,8 +82,22 @@ def cmd_health(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_representacao(args: argparse.Namespace) -> int:
+    payload = json.loads(Path(args.case_json).read_text(encoding="utf-8"))
+    manifest = write_packet(payload.get("meta", {}), payload.get("claims", []), Path(args.output))
+    print(json.dumps(manifest, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_ftm(args: argparse.Namespace) -> int:
+    payload = json.loads(Path(args.case_json).read_text(encoding="utf-8"))
+    path = dump_ftm(payload, Path(args.output))
+    print(json.dumps({"ftm": str(path)}, ensure_ascii=False))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="vtb", description=f"Visão Tinker Bell Supreme {__version__}")
+    p = argparse.ArgumentParser(prog="vtb", description=f"Visao Tinker Bell Supreme {__version__}")
     p.add_argument("--db", default="data/vtb.sqlite3")
     sub = p.add_subparsers(dest="command", required=True)
     init = sub.add_parser("mission-init")
@@ -100,6 +116,10 @@ def build_parser() -> argparse.ArgumentParser:
     verify = sub.add_parser("manifest-verify", help="Verify an artifact against its SHA-256 manifest")
     verify.add_argument("manifest"); verify.set_defaults(func=cmd_verify_manifest)
     health = sub.add_parser("source-health"); health.add_argument("http_status", type=int); health.set_defaults(func=cmd_health)
+    peca = sub.add_parser("representacao", help="Gera relato Fala.BR e PDF de apuracao a partir de claims com URL e hash")
+    peca.add_argument("case_json"); peca.add_argument("output"); peca.set_defaults(func=cmd_representacao)
+    ftm = sub.add_parser("ftm-export", help="Exporta entidades em JSON compativel com FollowTheMoney")
+    ftm.add_argument("case_json"); ftm.add_argument("output"); ftm.set_defaults(func=cmd_ftm)
     return p
 
 
