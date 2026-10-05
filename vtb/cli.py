@@ -6,6 +6,7 @@ from pathlib import Path
 
 from . import __version__
 from .case_bundle import verify_case_bundle, write_case_bundle
+from .documentos import analisar, baixar, buscar_pncp
 from .ftm_export import dump as dump_ftm
 from .models import MissionState
 from .preservation import verify_manifest
@@ -96,6 +97,19 @@ def cmd_ftm(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_pncp(args: argparse.Namespace) -> int:
+    print(json.dumps(buscar_pncp(args.inicio, args.fim, args.pagina), ensure_ascii=False, indent=2, default=str))
+    return 0
+
+
+def cmd_documento(args: argparse.Namespace) -> int:
+    destino = Path(args.destino)
+    baixar(args.url, destino)
+    termos = [item for item in args.termo.split(",") if item]
+    print(json.dumps(analisar(destino, args.url, termos), ensure_ascii=False, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="vtb", description=f"Visao Tinker Bell Supreme {__version__}")
     p.add_argument("--db", default="data/vtb.sqlite3")
@@ -120,6 +134,11 @@ def build_parser() -> argparse.ArgumentParser:
     peca.add_argument("case_json"); peca.add_argument("output"); peca.set_defaults(func=cmd_representacao)
     ftm = sub.add_parser("ftm-export", help="Exporta entidades em JSON compativel com FollowTheMoney")
     ftm.add_argument("case_json"); ftm.add_argument("output"); ftm.set_defaults(func=cmd_ftm)
+    pncp = sub.add_parser("pncp-buscar", help="Lista contratacoes publicas do PNCP. Lead, nao fato")
+    pncp.add_argument("inicio"); pncp.add_argument("fim"); pncp.add_argument("--pagina", type=int, default=1); pncp.set_defaults(func=cmd_pncp)
+    documento = sub.add_parser("documento-analisar", help="Baixa documento oficial, calcula hash e localiza termos")
+    documento.add_argument("url"); documento.add_argument("destino"); documento.add_argument("--termo", default="")
+    documento.set_defaults(func=cmd_documento)
     return p
 
 
