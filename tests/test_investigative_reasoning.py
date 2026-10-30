@@ -76,6 +76,9 @@ def test_full_dossier_requires_human_review_and_never_alleges_crime(tmp_path):
     assert finding["evidence"][0]["locator"] == "p. 2"
     assert "EV-1" in result["markdown"]
     assert "revisão humana" in result["markdown"].lower()
+    assert "## Índice documental e cadeia de origem" in result["markdown"]
+    assert "## Causas, efeitos, atribuição e contraditório" in result["markdown"]
+    assert "## Execução orçamentária, preço e atribuições administrativas" in result["markdown"]
     store.close()
 
 
