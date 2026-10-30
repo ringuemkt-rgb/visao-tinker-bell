@@ -58,7 +58,8 @@ def test_non_bahia_does_not_guess_municipal_audit_url():
     [
         ({"uf": "XX"}, "UF"),
         ({"municipality": "Cidade Exemplo"}, "requires UF"),
-        ({"office": "rei"}, "unsupported office"),
+        ({"office": "rei"}, "unsupported"),
+        ({"office": "presidente"}, "ambiguous"),
         ({"start_year": 2030, "end_year": 2020}, "exceed"),
         ({"start_year": 1600}, "years"),
     ],
