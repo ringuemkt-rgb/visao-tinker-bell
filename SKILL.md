@@ -39,5 +39,16 @@ VERIFIED_PRIMARY, VERIFIED_CORROBORATED, PARTIALLY_SUPPORTED, UNVERIFIED, CONTRA
 8. Red Team before sensitive publication.
 9. Critical unsupported claims are quarantined.
 
+## Detectores Rosie / Serenata de Amor
+
+Para despesas parlamentares e comprovantes públicos, consulte
+[docs/SERENATA-PORT.md](docs/SERENATA-PORT.md).
+O módulo vtb.serenata_screening fornece triagem de CNPJ, cadastro temporal,
+limite mensal documentado, preço comparável, contexto geográfico, natureza eleitoral
+e documento fiscal reutilizado. Sua saída é somente ANOMALY_FOR_VERIFICATION:
+não afirma pagamento indevido, dolo, controle oculto ou corrupção.
+Jamais importar automaticamente o stack Django/Celery legado, nem publicar alertas
+sobre pessoas sem revisão documental e jurídica.
+
 ## Final rule
 Prefer `INCONCLUSIVE` or `READY_WITH_LIMITATIONS` over a stronger claim than the evidence can support.
