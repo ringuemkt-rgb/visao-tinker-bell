@@ -9,11 +9,12 @@ corruption, misuse, travel, individual liability, or payment.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -152,6 +153,13 @@ def _distance_km(a: PublicExpense, b: PublicExpense) -> float:
     dlon = math.radians(b.longitude - a.longitude)
     hav = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
     return 6371.0088 * 2 * math.asin(min(1.0, math.sqrt(hav)))
+
+
+def input_fingerprint(expenses: list[PublicExpense]) -> str:
+    """Hash of the local parsed records, not provenance of official originals."""
+    payload = [asdict(expense) for expense in expenses]
+    encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False, default=str, separators=(",", ":"))
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
 def screen_expenses(
@@ -318,6 +326,7 @@ def screen_expenses(
         "schema": "vtb.serenata_screening.v1",
         "analysis_type": "AUDIT_TRIAGE_NOT_CRIMINAL_FINDING",
         "records_examined": len(expenses),
+        "input_sha256": input_fingerprint(expenses),
         "source_scope": "USER_SUPPLIED_RECORDS_ONLY",
         "data_verified_against_primary_sources": False,
         "signals": [s.to_dict() for s in findings],
