@@ -10,7 +10,10 @@ from typing import Any
 from urllib.parse import urlsplit
 
 from .models import (
-    Claim, ClaimStatus, SourceHealth, SourceQuality,
+    Claim,
+    ClaimStatus,
+    SourceHealth,
+    SourceQuality,
 )
 from .runtime import CaseStore
 
@@ -81,7 +84,7 @@ def _hypothesis_matrix(
     seen: set[str] = set()
     for item in reviews:
         if not isinstance(item, dict):
-            raise ValueError("invalid hypothesis assessment")
+            raise TypeError("invalid hypothesis assessment")
         hid = str(item.get("hypothesis_id", ""))
         kind = str(item.get("kind", ""))
         if hid not in listed or hid in seen or kind not in SUPPORTED_KINDS:
@@ -93,7 +96,7 @@ def _hypothesis_matrix(
         assessments = []
         for row in checks:
             if not isinstance(row, dict):
-                raise ValueError("invalid evidence assessment")
+                raise TypeError("invalid evidence assessment")
             eid = str(row.get("evidence_id", ""))
             if eid not in evidence_ids:
                 raise ValueError(f"unknown evidence: {eid}")
@@ -248,9 +251,9 @@ def _markdown(result: dict[str, Any]) -> str:
     lines.extend([
         "",
         "## Limitações e responsabilidades",
-        "As classificações descrevem COMPLETUDE DOCUMENTAL, não veracidade material ou culpa. "
-        "Os conteúdos e vínculos devem ser conferidos nos originais. Revisão humana, jurídica "
-        "e contraditório são necessários antes de qualquer protocolo.",
+        ("As classificações descrevem COMPLETUDE DOCUMENTAL, não veracidade material ou culpa. "
+         "Os conteúdos e vínculos devem ser conferidos nos originais. Revisão humana, jurídica "
+         "e contraditório são necessários antes de qualquer protocolo."),
         "",
         "**Publicação automática: proibida. Dolo e responsabilidade: não inferidos.**",
     ])
