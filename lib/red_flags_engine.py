@@ -32,9 +32,11 @@ class RedFlagsEngine:
             rules_path = Path(__file__).parent.parent / "rules" / "red_flags.json"
         with open(rules_path, encoding="utf-8") as f:
             self.rules = {r["id"]: r for r in json.load(f)}
+        self.errors: list[dict[str, str]] = []
 
     def evaluate(self, context: Dict[str, Any]) -> List[Finding]:
         findings: List[Finding] = []
+        self.errors = []
         for rule_id, rule in self.rules.items():
             if not rule.get("implementada"):
                 continue
@@ -54,7 +56,8 @@ class RedFlagsEngine:
                             mensagem=self._build_message(rule, context),
                         )
                     )
-            except Exception:
+            except (TypeError, ValueError, OverflowError) as exc:
+                self.errors.append({"rule_id": rule_id, "error_type": type(exc).__name__})
                 continue
         return findings
 
@@ -79,11 +82,11 @@ class RedFlagsEngine:
 
         if rid == "fornecedor-cnpj-recem-aberto":
             dias = self._days_between(ctx.get("data_inicio_atividade"), ctx.get("dataAssinatura"))
-            return dias is not None and dias < 365
+            return dias is not None and 0 <= dias < 365
 
         if rid == "fornecedor-cnpj-muito-recente":
             dias = self._days_between(ctx.get("data_inicio_atividade"), ctx.get("dataAssinatura"))
-            return dias is not None and dias < 180
+            return dias is not None and 0 <= dias < 180
 
         if rid == "fornecedor-situacao-cadastral-irregular":
             sit = (ctx.get("descricao_situacao_cadastral") or ctx.get("situacao") or "").upper()
@@ -128,7 +131,7 @@ class RedFlagsEngine:
             dias = self._days_between(
                 ctx.get("dataPublicacaoPncp"), ctx.get("dataEncerramentoProposta")
             )
-            return dias is not None and dias < 8
+            return dias is not None and 0 <= dias < 8
 
         if rid == "ceap-fornecedor-dominante":
             return float(ctx.get("share_top1_fornecedor") or 0) > 0.4
@@ -153,7 +156,10 @@ class RedFlagsEngine:
             return anterior > 0 and (atual / anterior) > 5
 
         if rid == "candidato-sem-bens-declarados":
-            return float(ctx.get("totalDeBens") or 0) == 0
+            raw_value = ctx.get("totalDeBens")
+            if raw_value is None or str(raw_value).strip() == "":
+                return False
+            return float(raw_value) == 0
 
         if rid == "candidato-processos-cassacao":
             return int(ctx.get("count_processos_cassacao") or 0) > 0
@@ -170,7 +176,7 @@ class RedFlagsEngine:
             if isinstance(d2, str):
                 d2 = datetime.fromisoformat(d2.replace("Z", "")).date()
             if isinstance(d1, date) and isinstance(d2, date):
-                return abs((d2 - d1).days)
+                return (d2 - d1).days
         except Exception:
             pass
         return None
