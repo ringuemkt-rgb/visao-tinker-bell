@@ -103,8 +103,8 @@ def run_benchmark() -> dict[str, Any]:
         "limitations": [
             "Synthetic controls check code regressions and applicability gates only.",
             "These metrics do NOT measure performance on real contracts or allegations.",
-            "Real-world benchmarking requires independently adjudicated cases, negative controls, "
-            "complete source coverage and blinded reviewers.",
+            ("Real-world benchmarking requires independently adjudicated cases, negative controls, "
+             "complete source coverage and blinded reviewers."),
         ],
     }
 
