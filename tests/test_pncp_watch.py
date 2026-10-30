@@ -2,7 +2,7 @@
 import json
 from unittest.mock import Mock
 
-from vtb.pncp_watch import scan_supplier, _official_url, main
+from vtb.pncp_watch import _official_url, main, scan_supplier
 
 
 CNPJ = "01061616000135"
