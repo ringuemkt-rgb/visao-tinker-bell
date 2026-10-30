@@ -3,7 +3,12 @@ import pytest
 
 from vtb.investigative_reasoning import audit_dossier
 from vtb.models import (
-    Claim, EvidenceRecord, Hypothesis, SourceHealth, SourceQuality, SourceRecord,
+    Claim,
+    EvidenceRecord,
+    Hypothesis,
+    SourceHealth,
+    SourceQuality,
+    SourceRecord,
 )
 from vtb.runtime import CaseStore
 
