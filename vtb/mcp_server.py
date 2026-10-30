@@ -157,6 +157,8 @@ def evaluate_red_flags(context: dict[str, Any]) -> str:
 def red_flag_catalog() -> str:
     """Lista regras declarativas, seus dados necessários e estado de implementação."""
     path = Path(__file__).parent.parent / "rules" / "red_flags.json"
+    if not path.exists():
+        path = Path(__file__).parent / "data" / "red_flags.json"
     rules = json.loads(path.read_text(encoding="utf-8"))
     return _json({
         "count": len(rules),
@@ -172,6 +174,8 @@ def red_flag_catalog() -> str:
 def forensic_report_contract() -> str:
     """Retorna o schema do relatório pericial VTB para geração estruturada por uma IA."""
     path = Path(__file__).parent.parent / "schemas" / "forensic_report.schema.json"
+    if not path.exists():
+        path = Path(__file__).parent / "data" / "forensic_report.schema.json"
     return path.read_text(encoding="utf-8")
 
 
