@@ -30,8 +30,13 @@ OFFICE_ALIASES = {
     "governadora": "governador",
     "vice-governador": "vice-governador",
     "vice-governadora": "vice-governador",
-    "presidente": "presidente",
-    "vice-presidente": "vice-presidente",
+    "presidente da república": "presidente",
+    "vice-presidente da república": "vice-presidente",
+    "presidente da câmara municipal": "vereador",
+    "presidenta da câmara municipal": "vereador",
+    "presidente da assembleia": "deputado estadual",
+    "presidente do senado": "senador",
+    "presidente da câmara dos deputados": "deputado federal",
     "ministro": "ministro",
     "ministra": "ministro",
     "secretario": "secretario",
@@ -147,7 +152,7 @@ def build_politician_case(
         raise ValueError("case_id must contain 1..96 characters")
     office = office.strip().lower() if office else None
     if office and office not in OFFICE_ALIASES:
-        raise ValueError("unsupported office; see --office in CLI documentation")
+        raise ValueError("unsupported or ambiguous office; see --office in CLI documentation")
     office = OFFICE_ALIASES.get(office) if office else None
     uf = uf.upper().strip() if uf else None
     if uf is not None and uf not in UF_CODES:
