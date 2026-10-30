@@ -265,10 +265,10 @@ def _markdown(result: dict[str, Any]) -> str:
     lines.extend([
         "",
         "## Execução orçamentária, preço e atribuições administrativas",
-        "PENDENTE: conciliar valores estimados, adjudicados, contratados, empenhados, "
-        "liquidados, pagos e efetivamente executados, sem somar etapas.",
-        "PENDENTE: comparar serviços com atribuições legais e exercício efetivo "
-        "do quadro próprio; não inferir duplicidade pelo nome do cargo.",
+        ("PENDENTE: conciliar valores estimados, adjudicados, contratados, empenhados, "
+         "liquidados, pagos e efetivamente executados, sem somar etapas."),
+        ("PENDENTE: comparar serviços com atribuições legais e exercício efetivo "
+         "do quadro próprio; não inferir duplicidade pelo nome do cargo."),
         "PENDENTE: validar comparáveis de preço, especificação, período e localidade.",
         "",
         "## Hipóteses rivais e testes de falsificação",
