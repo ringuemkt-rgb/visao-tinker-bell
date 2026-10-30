@@ -29,7 +29,7 @@ def _date(value: str | date) -> date:
     return value if isinstance(value, date) else date.fromisoformat(value)
 
 
-def _money(value: str | int | float | Decimal) -> Decimal:
+def _money(value: str | float | Decimal) -> Decimal:
     try:
         result = Decimal(str(value))
     except InvalidOperation as exc:
@@ -159,7 +159,7 @@ def screen_expenses(
     *,
     quota_policies: list[QuotaPolicy] | None = None,
     min_peer_size: int = 10,
-    peer_multiplier: Decimal = Decimal("3"),
+    peer_multiplier: Decimal = Decimal(3),
     distance_review_km: float = 600.0,
 ) -> dict[str, Any]:
     """Apply six explainable screens with failure-closed applicability gates."""
