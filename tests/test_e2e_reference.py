@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from unittest.mock import Mock
 
 from vtb.adapters.base import AdapterResult
@@ -22,12 +23,12 @@ def test_reference_generates_structured_case_report_and_private_dashboard(tmp_pa
     assert result["status"] == "INCONCLUSIVE"
     assert result["validation"]["valid"] is True
     paths = result["output_files"]
-    report = json.loads(open(paths["report"], encoding="utf8").read())
+    report = json.loads(Path(paths["report"]).read_text(encoding="utf8"))
     assert report["publication_status"] == "INCONCLUSIVE"
     assert report["findings"][0]["classification"] == "PARTIALLY_SUPPORTED"
     assert report["evidence_gaps"]
-    assert "NÃO VALIDADO" not in open(paths["dashboard"], encoding="utf8").read()
-    assert "<html" in open(paths["dashboard"], encoding="utf8").read()
+    assert "NÃO VALIDADO" not in Path(paths["dashboard"]).read_text(encoding="utf8")
+    assert "<html" in Path(paths["dashboard"]).read_text(encoding="utf8")
 
 
 def test_reference_source_failure_does_not_fabricate_contract(tmp_path):
@@ -35,6 +36,6 @@ def test_reference_source_failure_does_not_fabricate_contract(tmp_path):
     adapter.get_contract.return_value = AdapterResult(False, SourceHealth.BLOCKED, error="blocked")
     result = run_public_reference("SYN-FAIL", tmp_path / "fail", adapter=adapter)
     assert result["status"] == "INCONCLUSIVE"
-    source = json.loads(open(result["output_files"]["source_summary"], encoding="utf8").read())
+    source = json.loads(Path(result["output_files"]["source_summary"]).read_text(encoding="utf8"))
     assert source["contract_verified"] is False
     assert source["coverage"] == "SOURCE_UNAVAILABLE"
