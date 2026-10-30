@@ -142,20 +142,23 @@ def evaluate_red_flags(context: dict[str, Any]) -> str:
     """Avalia regras determinísticas locais; retorna sinais para revisão, não acusações."""
     from lib.red_flags_engine import load_engine
 
-    findings = load_engine().evaluate(context)
+    engine = load_engine()
+    findings = engine.evaluate(context)
     normalized = []
     for finding in findings:
         if hasattr(finding, "__dataclass_fields__"):
             normalized.append(asdict(finding))
         else:
             normalized.append({"finding": str(finding)})
-    return _json({"status": "ANOMALY_FOR_VERIFICATION", "findings": normalized, "disclaimer": "Red flag não é prova."})
+    return _json({"status": "ANOMALY_FOR_VERIFICATION", "findings": normalized, "evaluation_errors": engine.errors, "disclaimer": "Red flag não é prova."})
 
 
 @mcp.tool()
 def red_flag_catalog() -> str:
     """Lista regras declarativas, seus dados necessários e estado de implementação."""
     path = Path(__file__).parent.parent / "rules" / "red_flags.json"
+    if not path.exists():
+        path = Path(__file__).parent / "data" / "red_flags.json"
     rules = json.loads(path.read_text(encoding="utf-8"))
     return _json({
         "count": len(rules),
@@ -171,6 +174,8 @@ def red_flag_catalog() -> str:
 def forensic_report_contract() -> str:
     """Retorna o schema do relatório pericial VTB para geração estruturada por uma IA."""
     path = Path(__file__).parent.parent / "schemas" / "forensic_report.schema.json"
+    if not path.exists():
+        path = Path(__file__).parent / "data" / "forensic_report.schema.json"
     return path.read_text(encoding="utf-8")
 
 
@@ -228,6 +233,45 @@ def triage_signals(signals: list[dict[str, Any]]) -> str:
             )
         )
     return _json({"triage_band": triage_band(parsed), "signal_count": len(parsed), "not_a_finding_of_guilt": True})
+
+
+
+@mcp.tool()
+def plan_public_queries(case_id: str, queries: list[dict[str, Any]]) -> str:
+    """Validate a bounded, allowlisted public-source plan; do not execute it."""
+    from .autonomy import build_readonly_plan
+    return _json(build_readonly_plan(case_id, queries))
+
+
+@mcp.tool()
+def run_public_queries(case_id: str, queries: list[dict[str, Any]]) -> str:
+    """Execute at most five read-only official-adapter queries for an existing case."""
+    from .autonomy import build_readonly_plan, execute_readonly_plan
+    plan = build_readonly_plan(case_id, queries)
+    store = _store()
+    try:
+        return _json(execute_readonly_plan(plan, store=store))
+    finally:
+        store.close()
+
+
+
+@mcp.tool()
+def optional_toolcheck(names: list[str] | None = None) -> str:
+    """Report local dependency discovery; never pretend installed means operational."""
+    from .optional_tools import optional_toolcheck as probe
+    return _json(probe(names))
+
+
+@mcp.tool()
+def draft_official_notice(case_id: str, recipient: str, claim_ids: list[str]) -> str:
+    """Generate an unfiled, evidence-linked text draft from an existing CaseStore case."""
+    from .notice import draft_case_notice
+    store = _store()
+    try:
+        return _json(draft_case_notice(store, case_id, recipient, claim_ids))
+    finally:
+        store.close()
 
 
 def main() -> None:

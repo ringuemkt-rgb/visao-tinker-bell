@@ -28,8 +28,11 @@ vtb = "vtb.cli:main"
 vtb-mcp = "vtb.mcp_server:main"
 
 [tool.setuptools.packages.find]
-include = ["vtb*"]
-exclude = ["lib*", "cases*", "rules*", "config*", "assets*", "schemas*", "huggingface*", "tests*"]
+include = ["vtb*", "lib*"]
+exclude = ["cases*", "rules*", "config*", "assets*", "schemas*", "huggingface*", "tests*"]
+
+[tool.setuptools.package-data]
+"vtb" = ["data/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

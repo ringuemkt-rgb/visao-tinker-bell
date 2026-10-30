@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ringuemkt-rgb/visao-tinker-bell/blob/main/schemas/forensic_report.schema.json",
+  "title": "VTB Forensic Report",
+  "description": "Contrato mínimo para relatório investigativo defensivo, com fatos, hipóteses, lacunas e limitações.",
+  "type": "object",
+  "required": ["report_id", "cutoff_at", "scope", "methodology", "entity_resolution", "findings", "hypotheses", "evidence_gaps", "limitations"],
+  "properties": {
+    "report_id": {"type": "string", "minLength": 1},
+    "cutoff_at": {"type": "string", "format": "date-time"},
+    "operator": {"type": "string"},
+    "scope": {
+      "type": "object",
+      "required": ["question", "jurisdiction"],
+      "properties": {"question": {"type": "string"}, "jurisdiction": {"type": "string"}, "time_range": {"type": "string"}},
+      "additionalProperties": false
+    },
+    "methodology": {"type": "array", "items": {"type": "string"}},
+    "entity_resolution": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["candidate", "decision", "reason", "evidence_ids"],
+        "properties": {
+          "candidate": {"type": "string"},
+          "decision": {"enum": ["MATCH_CONFIRMED", "MATCH_CANDIDATE", "MATCH_REJECTED", "UNRESOLVED"]},
+          "reason": {"type": "string"},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["finding_id", "classification", "statement", "evidence_ids", "confidence"],
+        "properties": {
+          "finding_id": {"type": "string"},
+          "classification": {"enum": ["FACT", "NEGATIVE_FACT_WITHIN_VERIFIED_SCOPE", "PARTIALLY_SUPPORTED", "SIGNAL", "HYPOTHESIS", "NOT_DEMONSTRATED", "REJECTED", "EVIDENCE_GAP"]},
+          "statement": {"type": "string"},
+          "evidence_ids": {"type": "array", "items": {"type": "string"}},
+          "confidence": {"enum": ["LOW", "MEDIUM", "HIGH"]},
+          "limitations": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "hypotheses": {"type": "array", "items": {"type": "object", "required": ["id", "statement", "status"], "properties": {"id": {"type": "string"}, "statement": {"type": "string"}, "status": {"enum": ["SUPPORTED", "LESS_REFUTED", "PLAUSIBLE", "NOT_SUPPORTED", "REFUTED", "UNRESOLVED"]}, "pro_evidence_ids": {"type": "array", "items": {"type": "string"}}, "contra_evidence_ids": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false}},
+    "evidence_gaps": {"type": "array", "items": {"type": "object", "required": ["description", "source_needed", "impact"], "properties": {"description": {"type": "string"}, "source_needed": {"type": "string"}, "impact": {"type": "string"}}, "additionalProperties": false}},
+    "limitations": {"type": "array", "items": {"type": "string"}},
+    "publication_status": {"enum": ["DRAFT", "READY_WITH_LIMITATIONS", "INCONCLUSIVE", "QUARANTINED"]}
+  },
+  "additionalProperties": false
+}

@@ -22,7 +22,7 @@ def evidence_gate(ledger: ClaimLedger) -> GateResult:
     )
 
 
-def publication_gate(ledger: ClaimLedger, red_team_done: bool, legal_review_done: bool = True) -> GateResult:
+def publication_gate(ledger: ClaimLedger, red_team_done: bool, legal_review_done: bool = False) -> GateResult:
     reasons: list[str] = []
     eg = evidence_gate(ledger)
     reasons.extend(eg.reasons)

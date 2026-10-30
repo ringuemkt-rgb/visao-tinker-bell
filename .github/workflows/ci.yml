@@ -35,3 +35,23 @@ jobs:
           vtb --db /tmp/vtb.sqlite3 mission-init smoke "Smoke test" "A fonte suporta o claim?"
           vtb --db /tmp/vtb.sqlite3 mission-status smoke
           vtb source-health 403 | grep SOURCE_DEGRADED_NO_ABSENCE_INFERENCE
+      - name: Wheel packaging integrity
+        run: |
+          python -m pip wheel --no-deps . --wheel-dir /tmp/vtb-wheel
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          wheels = list(Path('/tmp/vtb-wheel').glob('*.whl'))
+          assert len(wheels) == 1, wheels
+          with ZipFile(wheels[0]) as z:
+              names = set(z.namelist())
+              for required in (
+                  'vtb/autonomy.py',
+                  'vtb/mcp_server.py',
+                  'vtb/notice.py',
+                  'vtb/data/red_flags.json',
+                  'vtb/data/forensic_report.schema.json',
+                  'lib/red_flags_engine.py',
+              ):
+                  assert required in names, required
+          PY

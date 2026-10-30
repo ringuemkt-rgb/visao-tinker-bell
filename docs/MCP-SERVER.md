@@ -73,6 +73,11 @@ O endpoint e os requisitos exatos de autenticação dependem da versão do SDK e
 | `forensic_report_contract` | Retorna o schema estruturado para geração de relatórios evidence-first. |
 | `next_best_queries` | Prioriza consultas candidatas por ganho informacional e custo. |
 | `preserve_navigation_snapshot` | Preserva conteúdo fornecido pelo cliente com URL e SHA-256; não navega na internet. |
+| `plan_public_queries` | Valida plano de até cinco consultas públicas permitidas, sem executar. |
+| `run_public_queries` | Executa consultas oficiais somente-leitura por adapters PNCP/TSE/Transparência em caso existente, com auditoria. |
+| `optional_toolcheck` | Descobre versões instaladas de ferramentas opcionais; não afirma prontidão operacional. |
+| `draft_official_notice` | Gera minuta não protocolada, restrita a claims com fontes primárias saudáveis. |
+
 
 O servidor não expõe uma ferramenta genérica de requisição HTTP ou execução de código. Novos conectores devem ser adicionados como adapters explicitamente revisados, com timeout, rate limit, schema, preservação, proveniência e testes.
 
