@@ -52,3 +52,11 @@ def test_html_refuses_different_screening_volume():
     other = screen_expenses([event("A"), event("B")])
     with pytest.raises(ValueError, match="record count"):
         render_review(events, other)
+
+
+def test_html_refuses_another_dataset_even_if_row_count_matches():
+    original = [event("A")]
+    altered = [event("B")]
+    other = screen_expenses(original)
+    with pytest.raises(ValueError, match="input hash"):
+        render_review(altered, other)
