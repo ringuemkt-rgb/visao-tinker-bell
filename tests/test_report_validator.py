@@ -44,7 +44,7 @@ def test_real_bytes_and_source_are_required(tmp_path):
     case = snapshot(original.read_bytes())
     assert validate_report(report(), case_snapshot=case)["valid"] is False
     valid = validate_report(report(), case_snapshot=case,
-                            artifact_paths={"S-1": original})
+                            artifact_paths={"S-1": original}, human_reviewed=True)
     assert valid["valid"] is True
     assert valid["documents_checked"] == 1
     assert valid["facts_checked"] == 1
@@ -100,3 +100,37 @@ def test_hypothesis_without_evidence_is_permitted_but_fake_reference_is_not():
     assert validate_report(sample)["valid"]
     sample["hypotheses"][0]["pro_evidence_ids"] = ["E-FAKE"]
     assert "UNRESOLVED_HYPOTHESIS_EVIDENCE:H-1:E-FAKE" in validate_report(sample)["issues"]
+
+
+def test_excerpt_must_exist_in_actual_text_original(tmp_path):
+    original = tmp_path / "source.txt"
+    original.write_bytes(b"Synthetic contract")
+    case = snapshot(original.read_bytes())
+    case["evidence"][0]["payload"]["excerpt"] = "Invented snippet not in file"
+    result = validate_report(
+        report(), case_snapshot=case, artifact_paths={"S-1": original},
+        human_reviewed=True,
+    )
+    assert "EXCERPT_NOT_IN_ORIGINAL:F-1:E-1" in result["issues"]
+
+
+def test_material_fact_needs_manual_review_even_in_draft(tmp_path):
+    original = tmp_path / "source.txt"
+    original.write_bytes(b"Synthetic contract")
+    case = snapshot(original.read_bytes())
+    result = validate_report(report(), case_snapshot=case,
+                             artifact_paths={"S-1": original})
+    assert "MATERIAL_FACT_REVIEW_REQUIRED" in result["issues"]
+
+
+def test_negative_fact_needs_scope_review(tmp_path):
+    original = tmp_path / "source.txt"
+    original.write_bytes(b"Synthetic contract")
+    case = snapshot(original.read_bytes())
+    sample = report(classification="NEGATIVE_FACT_WITHIN_VERIFIED_SCOPE")
+    result = validate_report(sample, case_snapshot=case,
+                             artifact_paths={"S-1": original}, human_reviewed=True)
+    assert "NEGATIVE_SCOPE_NOT_VERIFIED:F-1" in result["issues"]
+    assert validate_report(sample, case_snapshot=case,
+                           artifact_paths={"S-1": original},
+                           human_reviewed=True, negative_scope_reviewed=True)["valid"]
