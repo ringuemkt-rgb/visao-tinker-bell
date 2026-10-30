@@ -28,6 +28,7 @@ def validate_report(
     human_reviewed: bool = False,
     counterevidence_reviewed: bool = False,
     legal_reviewed: bool = False,
+    negative_scope_reviewed: bool = False,
 ) -> dict[str, Any]:
     """Fail closed for material facts, without pretending to certify document truth."""
     schema = _report_schema()
@@ -55,6 +56,8 @@ def validate_report(
             violations.add(f"DUPLICATE_EVIDENCE:{fid}")
         if finding["classification"] in MATERIAL_CLASSES:
             material_facts += 1
+            if finding["classification"] == "NEGATIVE_FACT_WITHIN_VERIFIED_SCOPE" and not negative_scope_reviewed:
+                violations.add(f"NEGATIVE_SCOPE_NOT_VERIFIED:{fid}")
             if not ids:
                 violations.add(f"FACT_WITHOUT_EVIDENCE:{fid}")
             if not case_snapshot:
@@ -90,6 +93,11 @@ def validate_report(
             if hashlib.sha256(data).hexdigest() != sha:
                 violations.add(f"ORIGINAL_HASH_MISMATCH:{fid}:{sid}")
                 continue
+            if Path(original).suffix.lower() in {".txt", ".md", ".csv", ".json"}:
+                raw_text = data.decode("utf-8", errors="replace")
+                if ev["excerpt"] not in raw_text:
+                    violations.add(f"EXCERPT_NOT_IN_ORIGINAL:{fid}:{eid}")
+                    continue
             documents_checked.add(sid)
 
     for hypothesis in report.get("hypotheses", []):
@@ -99,6 +107,8 @@ def validate_report(
     ids = [x["finding_id"] for x in findings]
     if len(ids) != len(set(ids)):
         violations.add("DUPLICATE_FINDING_ID")
+    if material_facts and not human_reviewed:
+        violations.add("MATERIAL_FACT_REVIEW_REQUIRED")
     if report.get("publication_status") == "READY_WITH_LIMITATIONS":
         if not human_reviewed:
             violations.add("HUMAN_REVIEW_NOT_RECORDED")
@@ -129,6 +139,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--human-reviewed", action="store_true")
     parser.add_argument("--counterevidence-reviewed", action="store_true")
     parser.add_argument("--legal-reviewed", action="store_true")
+    parser.add_argument("--negative-scope-reviewed", action="store_true")
     args = parser.parse_args(argv)
     report = json.loads(Path(args.report).read_text(encoding="utf-8"))
     case = json.loads(Path(args.case_export).read_text(encoding="utf-8")) if args.case_export else None
@@ -136,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
     result = validate_report(
         report, case_snapshot=case, artifact_paths=paths,
         human_reviewed=args.human_reviewed, counterevidence_reviewed=args.counterevidence_reviewed,
-        legal_reviewed=args.legal_reviewed,
+        legal_reviewed=args.legal_reviewed, negative_scope_reviewed=args.negative_scope_reviewed,
     )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["valid"] else 2
