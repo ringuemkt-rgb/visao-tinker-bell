@@ -142,14 +142,15 @@ def evaluate_red_flags(context: dict[str, Any]) -> str:
     """Avalia regras determinísticas locais; retorna sinais para revisão, não acusações."""
     from lib.red_flags_engine import load_engine
 
-    findings = load_engine().evaluate(context)
+    engine = load_engine()
+    findings = engine.evaluate(context)
     normalized = []
     for finding in findings:
         if hasattr(finding, "__dataclass_fields__"):
             normalized.append(asdict(finding))
         else:
             normalized.append({"finding": str(finding)})
-    return _json({"status": "ANOMALY_FOR_VERIFICATION", "findings": normalized, "disclaimer": "Red flag não é prova."})
+    return _json({"status": "ANOMALY_FOR_VERIFICATION", "findings": normalized, "evaluation_errors": engine.errors, "disclaimer": "Red flag não é prova."})
 
 
 @mcp.tool()
@@ -246,6 +247,25 @@ def run_public_queries(case_id: str, queries: list[dict[str, Any]]) -> str:
     store = _store()
     try:
         return _json(execute_readonly_plan(plan, store=store))
+    finally:
+        store.close()
+
+
+
+@mcp.tool()
+def optional_toolcheck(names: list[str] | None = None) -> str:
+    """Report local dependency discovery; never pretend installed means operational."""
+    from .optional_tools import optional_toolcheck as probe
+    return _json(probe(names))
+
+
+@mcp.tool()
+def draft_official_notice(case_id: str, recipient: str, claim_ids: list[str]) -> str:
+    """Generate an unfiled, evidence-linked text draft from an existing CaseStore case."""
+    from .notice import draft_case_notice
+    store = _store()
+    try:
+        return _json(draft_case_notice(store, case_id, recipient, claim_ids))
     finally:
         store.close()
 
