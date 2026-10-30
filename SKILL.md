@@ -39,5 +39,16 @@ VERIFIED_PRIMARY, VERIFIED_CORROBORATED, PARTIALLY_SUPPORTED, UNVERIFIED, CONTRA
 8. Red Team before sensitive publication.
 9. Critical unsupported claims are quarantined.
 
+## Perícia de qualquer agente político (fontes abertas)
+
+Quando solicitado exame de pessoa com cargo político, usar o intake e o padrão
+de dados de [docs/POLITICIAN-FORENSIC-REPORT.md](docs/POLITICIAN-FORENSIC-REPORT.md).
+O comando politician-init prepara um caso inicialmente QUARANTINED e fontes
+NOT_QUERIED; ele não realiza investigação automática nem confirma identidades.
+Cada vínculo relevante exige documento, período e evidence_id, e o relatório
+deve ser inteligível, conter contraprovas e destacar a próxima diligência.
+Presidência de Câmara ou Assembleia exige identificação da função parlamentar
+e não pode ser confundida com a Presidência da República.
+
 ## Final rule
 Prefer `INCONCLUSIVE` or `READY_WITH_LIMITATIONS` over a stronger claim than the evidence can support.
