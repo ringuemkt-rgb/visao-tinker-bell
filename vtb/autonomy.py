@@ -6,7 +6,8 @@ Every network operation must be an explicitly registered public-source adapter.
 from __future__ import annotations
 
 import os
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from .adapters.base import AdapterResult
 from .adapters.pncp import PNCPAdapter
@@ -31,7 +32,7 @@ def _digits(value: Any) -> str:
 def validate_query(query: dict[str, Any]) -> dict[str, Any]:
     """Normalize and restrict query arguments; reject arbitrary endpoints."""
     if not isinstance(query, dict):
-        raise ValueError("query must be an object")
+        raise TypeError("query must be an object")
     operation = query.get("operation")
     if operation not in OPERATIONS:
         raise ValueError("operation is not allowlisted")
@@ -130,7 +131,7 @@ def execute_readonly_plan(
                 "preview": _preview(result.data) if result.ok else None,
                 "negative_result_not_proof_of_absence": True,
             }
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 - isolate untrusted adapter failure
             outcome = {
                 "operation": query["operation"], "ok": False, "source_health": "UNKNOWN",
                 "error": f"{type(exc).__name__}: {str(exc)[:250]}",
