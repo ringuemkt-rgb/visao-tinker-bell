@@ -39,5 +39,14 @@ VERIFIED_PRIMARY, VERIFIED_CORROBORATED, PARTIALLY_SUPPORTED, UNVERIFIED, CONTRA
 8. Red Team before sensitive publication.
 9. Critical unsupported claims are quarantined.
 
+
+## Protocolo adaptativo de pesquisa
+
+Antes de iniciar uma perícia complexa, consulte [docs/ADAPTIVE-FORENSIC-RESEARCH.md](docs/ADAPTIVE-FORENSIC-RESEARCH.md).
+Aplique pesquisa de ferramentas quando servir para superar uma lacuna material, registre o TOOLCHECK, preserve
+a linhagem da evidência e inclua um quadro de cobertura e bloqueios no encerramento.
+Não marque ferramentas candidatas como instaladas ou testadas; não prometa varredura infinita,
+não contorne controles de acesso e não converta qualquer alerta em prova de desvio.
+
 ## Final rule
 Prefer `INCONCLUSIVE` or `READY_WITH_LIMITATIONS` over a stronger claim than the evidence can support.
