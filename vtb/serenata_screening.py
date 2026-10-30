@@ -13,7 +13,7 @@ import json
 import math
 import re
 from collections import defaultdict
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -44,13 +44,13 @@ def _cnpj_valid(value: str) -> bool:
     if len(digits) != 14 or len(set(digits)) == 1:
         return False
 
-    def check(first: int, weights: list[int]) -> int:
+    def check(weights: list[int]) -> int:
         remainder = sum(int(digits[i]) * w for i, w in enumerate(weights)) % 11
         return 0 if remainder < 2 else 11 - remainder
 
     return (
-        int(digits[12]) == check(12, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
-        and int(digits[13]) == check(13, [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
+        int(digits[12]) == check([5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
+        and int(digits[13]) == check([6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
     )
 
 
@@ -304,7 +304,7 @@ def screen_expenses(
         )
         if farthest[2] > distance_review_km:
             findings.append(_signal(
-                f"ROSIE-GEO-{actor}-{day.isoformat()}", "Disp ersão geográfica de despesas no mesmo dia".replace("Disp ersão", "Dispersão"),
+                f"ROSIE-GEO-{actor}-{day.isoformat()}", "Dispersão geográfica de despesas no mesmo dia",
                 f"Documentos sugerem locais separados por cerca de {farthest[2]:.0f} km; não demonstram presença física.",
                 set(farthest[0].evidence_ids + farthest[1].evidence_ids),
                 category=SignalCategory.DOCUMENT, severity=SignalSeverity.LOW,
