@@ -28,17 +28,23 @@ def run_case_qa(
     *,
     red_team_done: bool,
     legal_review_done: bool,
+    verified_evidence_ids: set[str] | None = None,
 ) -> QAReport:
     report = QAReport()
+    verified = verified_evidence_ids or set()
     unsupported_critical = [
-        claim.claim_id for claim in ledger.claims.values() if claim.critical and not claim.evidence_ids
+        claim.claim_id for claim in ledger.claims.values()
+        if claim.critical and (not claim.evidence_ids or not set(claim.evidence_ids).issubset(verified))
     ]
     report.findings.append(
-        QAFinding("CRITICAL_CLAIMS_HAVE_EVIDENCE", not unsupported_critical, ",".join(unsupported_critical) or "ok")
+        QAFinding("CRITICAL_CLAIMS_HAVE_VERIFIED_EVIDENCE", not unsupported_critical, ",".join(unsupported_critical) or "ok")
     )
-    unsupported_signals = [signal.signal_id for signal in signals if not signal.evidence_ids]
+    unsupported_signals = [
+        signal.signal_id for signal in signals
+        if not signal.evidence_ids or not set(signal.evidence_ids).issubset(verified)
+    ]
     report.findings.append(
-        QAFinding("SIGNALS_HAVE_EVIDENCE", not unsupported_signals, ",".join(unsupported_signals) or "ok")
+        QAFinding("SIGNALS_HAVE_VERIFIED_EVIDENCE", not unsupported_signals, ",".join(unsupported_signals) or "ok")
     )
     report.findings.append(QAFinding("RED_TEAM_DONE", red_team_done, "required before sensitive publication"))
     legal_sensitive = any(claim.legal_sensitive for claim in ledger.claims.values()) or any(

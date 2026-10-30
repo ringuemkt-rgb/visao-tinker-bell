@@ -45,12 +45,28 @@ class RiskSignal:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
-    def publication_safe(self) -> bool:
-        return bool(self.evidence_ids) and self.status == "ANOMALY_FOR_VERIFICATION"
+    def publication_safe(
+        self,
+        *,
+        verified_evidence_ids: set[str] | None = None,
+        human_reviewed: bool = False,
+        legal_reviewed: bool = False,
+    ) -> bool:
+        """A textual evidence ID never authorizes publication by itself."""
+        return (
+            self.status == "ANOMALY_FOR_VERIFICATION"
+            and bool(self.evidence_ids)
+            and verified_evidence_ids is not None
+            and set(self.evidence_ids).issubset(verified_evidence_ids)
+            and human_reviewed
+            and (not self.legal_validation_required or legal_reviewed)
+        )
 
 
-def triage_band(signals: list[RiskSignal]) -> str:
-    """Prioridade de revisão, nunca probabilidade de corrupção ou culpa."""
+def triage_band(
+    signals: list[RiskSignal], *, evidence_lineage: dict[str, str] | None = None
+) -> str:
+    """Prioridade de revisão. Sem proveniência, não presumir fontes independentes."""
     weights = {
         SignalSeverity.INFO: 0,
         SignalSeverity.LOW: 1,
@@ -59,7 +75,12 @@ def triage_band(signals: list[RiskSignal]) -> str:
         SignalSeverity.CRITICAL_REVIEW: 6,
     }
     points = sum(weights[s.severity] for s in signals)
-    independent_evidence = len({e for signal in signals for e in signal.evidence_ids})
+    evidence_ids = {e for signal in signals for e in signal.evidence_ids}
+    # Lineage must be supplied from audited source records, not derived from ID names.
+    independent_evidence = (
+        len({evidence_lineage[e] for e in evidence_ids if evidence_lineage.get(e)})
+        if evidence_lineage is not None else 0
+    )
     if points >= 12 and independent_evidence >= 4:
         return "P1_DEEP_REVIEW"
     if points >= 6 and independent_evidence >= 2:

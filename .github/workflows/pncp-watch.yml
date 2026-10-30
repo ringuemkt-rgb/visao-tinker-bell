@@ -1,0 +1,32 @@
+name: PNCP public supplier index watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 08:15 in America/Bahia (UTC-3); GitHub Actions cron is UTC.
+    - cron: '15 11 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install VTB
+        run: python -m pip install -e .
+      - name: Search public PNCP supplier index (exact CNPJ, bounded)
+        run: python -m vtb.pncp_watch --max-pages 8 --output pncp-supplier-watch.json
+      - name: Preserve results for human review (including source failures)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pncp-supplier-watch
+          path: pncp-supplier-watch.json
+          if-no-files-found: warn
+          retention-days: 30

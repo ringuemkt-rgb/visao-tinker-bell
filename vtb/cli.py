@@ -6,7 +6,8 @@ from pathlib import Path
 
 from . import __version__
 from .case_bundle import verify_case_bundle, write_case_bundle
-from .models import MissionState
+from .models import Hypothesis, MissionState
+from .politician_cases import OFFICE_ALIASES, build_politician_case
 from .preservation import verify_manifest
 from .runtime import CaseStore
 from .source_health import classify_http_status, negative_result_label
@@ -80,6 +81,47 @@ def cmd_health(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_politician_init(args: argparse.Namespace) -> int:
+    """Open an evidence-empty political investigation without implying wrongdoing."""
+    plan = build_politician_case(
+        args.case_id,
+        args.name,
+        office=args.office,
+        uf=args.uf,
+        municipality=args.municipality,
+        start_year=args.start_year,
+        end_year=args.end_year,
+    )
+    path = Path(args.output)
+    if path.exists():
+        raise FileExistsError(f"Refusing to replace existing case plan: {path}")
+    store = CaseStore(args.db)
+    try:
+        store.create_mission(
+            args.case_id,
+            f"Perícia documental — {plan['person']['name_provided']}",
+            plan["report_template"]["scope"]["question"],
+            plan["report_template"]["scope"]["jurisdiction"],
+            plan["report_template"]["scope"]["time_range"],
+        )
+        for item in plan["report_template"]["hypotheses"]:
+            store.add_hypothesis(args.case_id, Hypothesis(item["id"], item["statement"]))
+    finally:
+        store.close()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("x", encoding="utf-8") as handle:
+        json.dump(plan, handle, ensure_ascii=False, indent=2)
+        handle.write("\n")
+    print(json.dumps({
+        "case_id": args.case_id,
+        "output": str(path),
+        "identity": "UNRESOLVED",
+        "coverage": "NOT_STARTED",
+        "publication_status": "QUARANTINED",
+    }, ensure_ascii=False))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="vtb", description=f"Visão Tinker Bell Supreme {__version__}")
     p.add_argument("--db", default="data/vtb.sqlite3")
@@ -100,6 +142,18 @@ def build_parser() -> argparse.ArgumentParser:
     verify = sub.add_parser("manifest-verify", help="Verify an artifact against its SHA-256 manifest")
     verify.add_argument("manifest"); verify.set_defaults(func=cmd_verify_manifest)
     health = sub.add_parser("source-health"); health.add_argument("http_status", type=int); health.set_defaults(func=cmd_health)
+    politician = sub.add_parser(
+        "politician-init", help="Create an evidence-empty, jurisdiction-aware political case plan"
+    )
+    politician.add_argument("case_id")
+    politician.add_argument("name")
+    politician.add_argument("--office", choices=sorted(OFFICE_ALIASES))
+    politician.add_argument("--uf", help="Two-letter state code")
+    politician.add_argument("--municipality")
+    politician.add_argument("--start-year", type=int)
+    politician.add_argument("--end-year", type=int)
+    politician.add_argument("--output", required=True, help="Local JSON path; do not commit real-case data")
+    politician.set_defaults(func=cmd_politician_init)
     return p
 
 
