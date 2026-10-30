@@ -112,3 +112,24 @@ def test_cli_preserves_failure_output_and_exits_nonzero(tmp_path, monkeypatch):
     output = tmp_path / "report.json"
     assert main(["--cnpj", CNPJ, "--output", str(output)]) == 2
     assert json.loads(output.read_text(encoding="utf8"))["results"][0]["health"] == "UNAVAILABLE"
+
+
+def test_live_index_schema_supplier_ni():
+    session = Mock()
+    session.get.return_value = _response(
+        [{
+            "fornecedor_ni": CNPJ,
+            "fornecedor_nome": "GRUPO FOLCLORICO CULTURAL ZAMBIAPUNGA",
+            "numero_controle_pncp": "13120613000295-2-000002/2026",
+            "orgao_nome": "MUNICIPIO DE LARANJEIRAS",
+            "item_url": "/contratos/13120613000295/2026/2",
+            "valor_global": 18000,
+        }], 1
+    )
+    result = scan_supplier(CNPJ, session=session, delay_seconds=0)
+    assert result["health"] == "OK"
+    assert len(result["records"]) == 1
+    assert result["records"][0]["contract_global_value"] == 18000
+    assert result["records"][0]["pncp_url"] == (
+        "https://pncp.gov.br/contratos/13120613000295/2026/2"
+    )
