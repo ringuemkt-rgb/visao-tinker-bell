@@ -147,7 +147,17 @@ Fazer análise comparativa de decisões judiciais por tipo e requisitos: casos e
 
 Não reconstruir supostas preferências pessoais de magistrados para "manipular" decisão. Antecipar as teses de defesa significa corrigir contradições reais e reconhecer garantias processuais.
 
-## 9. Limitações e revisão exigida
+## 9. Canais de encaminhamento verificados na Bahia
+
+- **MPBA — denúncia geral**: https://atendimento.mpba.mp.br/denuncia-geral/ . A interface oferece identificação, pedido de sigilo sujeito à decisão e relato anônimo, áreas como moralidade administrativa, anexos e descrição do que se espera da atuação do MP. A comunicação anônima isolada é frágil como prova. Não transmitir sem ordem expressa do usuário.
+- **TCM-BA**: principal tribunal de controle das contas **municipais** baianas; conferir regimento e requisitos de denúncia/representação atualizados antes do protocolo. A existência de dados no site do TCE/BA não significa competência deste sobre toda despesa municipal.
+- **TCE-BA**: controle de recursos de competência estadual, com requisitos formais de denúncia, inclusive qualidade e identificação; https://www.tce.ba.gov.br/perguntas-frequentes . Comunicação pela ouvidoria não equivale sempre a denúncia regimental.
+- **TCU**: https://portal.tcu.gov.br/carta-de-servicos/servicos-de-apoio-ao-cidadao/denuncia-e-representacao quando a matéria envolve competência federal.
+- **LAI**: solicitar documentos à administração e, se não disponibilizados, recorrer administrativamente pelos canais competentes.
+
+A escolha deve ser feita segundo **ente responsável, origem da verba, programa, instrumento, fiscalização específica, interesse e prazo**, sem distribuir acusação idêntica em massa.
+
+## 10. Limitações e revisão exigida
 
 Documento não oferece consultoria jurídica individual nem assegura êxito. Revisar com advogado especializado em direito público/processual antes de eventual petição judicial. MP e controle externo podem requisitar documentos não disponíveis ao cidadão; documentar diligências e limites, sem tentar suprir acesso sigiloso por meios clandestinos.
 
