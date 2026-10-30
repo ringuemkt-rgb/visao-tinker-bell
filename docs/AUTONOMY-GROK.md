@@ -3,7 +3,7 @@
 ## Entregue nesta branch
 - Duas skills nativas do Grok Build em `.grok/skills/`: investigação brasileira e HUMAN WRITING OS.
 - `vtb.autonomy`: plano de 1 a 5 consultas públicas, validação de parâmetros, operações allowlisted e executor somente-leitura com auditoria no CaseStore.
-- Ferramentas MCP `plan_public_queries` e `run_public_queries` (caso pré-cadastrado).
+- Ferramentas MCP `plan_public_queries`, `run_public_queries`, `optional_toolcheck` e `draft_official_notice` (caso pré-cadastrado).
 - Testes offline de restrição de operações, tratamento de falhas e registro de execução.
 
 ## Capacidades reais e limites
