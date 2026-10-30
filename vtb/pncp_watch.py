@@ -33,7 +33,7 @@ def _official_url(value: Any) -> str | None:
         return None
     if value.startswith("https://pncp.gov.br/"):
         return value
-    if value.startswith("/app/") or value.startswith("/contratos/"):
+    if value.startswith(("/app/", "/contratos/")):
         return "https://pncp.gov.br" + value
     return None
 
