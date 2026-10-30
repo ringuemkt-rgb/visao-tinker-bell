@@ -38,6 +38,7 @@ VERIFIED_PRIMARY, VERIFIED_CORROBORATED, PARTIALLY_SUPPORTED, UNVERIFIED, CONTRA
 7. Privacy & necessity.
 8. Red Team before sensitive publication.
 9. Critical unsupported claims are quarantined.
+10. Para notícias de fato, representações e dossiês sobre agentes públicos, aplicar [docs/LEGAL-ADVERSARIAL-REVIEW.md](docs/LEGAL-ADVERSARIAL-REVIEW.md): revisar individualização, dolo quando exigido, prejuízo efetivo quando exigido, competência, contraprovas e admissibilidade. Distinguir comunicação cidadã e acusação judicial; sem previsão de condenação ou supressão do direito de defesa.
 
 ## Final rule
 Prefer `INCONCLUSIVE` or `READY_WITH_LIMITATIONS` over a stronger claim than the evidence can support.
