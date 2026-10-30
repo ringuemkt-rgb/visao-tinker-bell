@@ -76,6 +76,21 @@ A saída registra: total de registros, sinais, parâmetros, alternativas lícita
 - Relações políticas, familiares e de vizinhança não são prova de controle oculto.
 - Nunca automatizar imputação de corrupção ou denúncia/publicação.
 
+## Interface Jarbas-like de revisão local
+
+Além dos detectores, foi implementado um visualizador HTML local em vtb/serenata_review.py.
+Ele agrupa alertas por método, descreve os fundamentos e permite navegar entre registros
+de despesas de mesma data/pessoa, com conteúdo HTML escapado e sem publicar dados em servidor.
+Este visualizador NÃO busca recibos, não certifica documentos e não é uma instância Django/Jarbas.
+
+Execução:
+
+    python -m vtb.serenata_review ./dados_privados.json --screening ./relatorio_privado.json --output ./revisao_privada.html
+
+Se a opção --screening for omitida, os registros são reavaliados com as regras padrão.
+Use um arquivo de saída local e privado. É proibido publicar a página contendo informações
+de indivíduos sem revisão específica de privacidade e pertinência.
+
 ## Próximas etapas não entregues
 
 1. Interface Jarbas-like para navegação por documento com autorização e privacidade.
