@@ -9,9 +9,8 @@ import re
 from typing import Any
 from urllib.parse import urlsplit
 
-from .claims import ClaimLedger
 from .models import (
-    Claim, ClaimStatus, EvidenceRecord, SourceHealth, SourceQuality, SourceRecord,
+    Claim, ClaimStatus, SourceHealth, SourceQuality,
 )
 from .runtime import CaseStore
 
@@ -45,7 +44,7 @@ def _normal_line(value: Any, length: int = 900) -> str:
 
 
 def _safe_md(value: Any) -> str:
-    return _normal_line(value).replace("|", "\\|").replace("'", "’").replace("\\", "/")
+    return _normal_line(value).replace("|", "∣").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def _verified_url(value: Any) -> bool:
