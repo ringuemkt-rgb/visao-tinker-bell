@@ -1,0 +1,59 @@
+{
+  "schema": "vtb.judicial_controls.v1",
+  "cutoff_date": "2026-10-30",
+  "purpose": "Qualitative reference corpus. NOT fitted model labels, not accuracy benchmark, not a prediction of guilt.",
+  "cases": [
+    {
+      "id": "STJ-REsp-2061719-TO",
+      "court": "STJ",
+      "decision_date": "2024-08-27",
+      "publication_date": "2024-09-02",
+      "disposition": "LIABILITY_MAINTAINED_WITH_PENALTY_REASSESSMENT",
+      "topic": "Fraudulent intermediary companies in municipal procurement; individual conduct and purpose supported by proceedings",
+      "source_url": "https://scon.stj.jus.br/jurisprudencia/externo/informativo/?acao=pesquisar&aplicacao=informativo&livre=%40CNOT%3D%27021218%27",
+      "control_class": "DOCUMENTED_SPECIFIC_INTENT",
+      "note": "No presumption that company contact or public award alone is an intermediary fraud."
+    },
+    {
+      "id": "STJ-REsp-2272868-SE",
+      "court": "STJ",
+      "decision_date": "2026-09-01",
+      "publication_date": "2026-09-03",
+      "disposition": "IMPROBITY_CLAIM_REJECTED_BY_STJ",
+      "topic": "Municipal administration irregularities without demonstrated intentional conduct and actual financial injury",
+      "source_url": "https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias/2026/03092026-Falta-de-comprovacao-de-dolo-leva-Segunda-Turma-a-reverter-condenacao-de-ex-prefeito-de-Itabaiana--SE--por.aspx",
+      "control_class": "IRREGULARITY_NOT_ENOUGH",
+      "note": "Judgment is legal evidentiary control, not proof every similar case is lawful."
+    },
+    {
+      "id": "STJ-AgInt-AREsp-2080146-SP",
+      "court": "STJ",
+      "decision_date": "2025-05-20",
+      "publication_date": "2025-05-28",
+      "disposition": "MINORITY_SHAREHOLDER_REMOVED_FROM_CLAIM",
+      "topic": "Specific individual conduct and subjective element not stated sufficiently against minority shareholder",
+      "source_url": "https://scon.stj.jus.br/SCON/pesquisar.jsp?b=ACOR&fr=veja&i=1&livre=%28%27AINTARESP%27+INPATH%28CLAS%29+AND+%272080146%27+INPATH%28NUM%29%29+OR+%28%28%27AgInt+no+AREsp+2080146%27%29+INPATH%28SUCE%29%29&thesaurus=JURIDICO",
+      "control_class": "PERSONAL_CONDUCT_REQUIRED",
+      "note": "A person being in a company is not sufficient evidence of participation."
+    },
+    {
+      "id": "STJ-AgInt-REsp-2154497-MG",
+      "court": "STJ",
+      "decision_date": "2026-06-16",
+      "publication_date": "2026-06-19",
+      "disposition": "IMPROBITY_CLAIM_REJECTED_IN_CONTEXT",
+      "topic": "Appointment to political secretary offices alone did not demonstrate required subjective element",
+      "source_url": "https://scon.stj.jus.br/jurisprudencia/externo/informativo/?livre=%40CNOT%3D022438",
+      "control_class": "KINSHIP_NOT_AUTOMATIC_PROOF",
+      "note": "Specific to political offices and adjudicated facts; do not overgeneralize."
+    }
+  ],
+  "evaluated_by_engine": false,
+  "blinded_review": false,
+  "original_full_court_records_archived": false,
+  "limitations": [
+    "Decisions selected manually; selection bias likely.",
+    "Legal outcomes cannot be used as ground truth for a detector without underlying comparable documents and independently annotated facts.",
+    "No accuracy claim is licensed by this file."
+  ]
+}
