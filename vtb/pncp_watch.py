@@ -7,7 +7,7 @@ import json
 import re
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -86,7 +86,7 @@ def scan_supplier(
         "query_kind": "PNCP_SEARCH_TEXT_INDEX_NOT_EXHAUSTIVE",
         "health": "UNKNOWN",
         "coverage": "UNVERIFIED",
-        "checked_at_utc": datetime.now(timezone.utc).isoformat(),
+        "checked_at_utc": datetime.now(UTC).isoformat(),
         "pages_fetched": 0,
         "index_total_reported": None,
         "items_examined": 0,
