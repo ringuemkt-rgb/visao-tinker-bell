@@ -14,3 +14,5 @@ Follow `SKILL.md`, `docs/METHODOLOGY.md`, `docs/FORENSIC-REPORT-STANDARD.md`, an
 - `.grok/skills/forensic-intelligence-br/SKILL.md`: source-bound public investigation.
 - `.grok/skills/human-writing-os/SKILL.md`: verified, polished, natural writing.
 - `vtb/autonomy.py`: small real, bounded read-only query execution; no external publishing.
+- `vtb/investigative_reasoning.py`: read-only TCU/CGU-style findings, document provenance, falsification, and deterministic dossier QA. No judgments of guilt.
+- `.grok/skills/investigative-reasoning-br/SKILL.md`: investigatory reasoning playbook grounded in public sources.

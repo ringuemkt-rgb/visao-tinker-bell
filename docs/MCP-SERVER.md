@@ -93,6 +93,18 @@ O servidor não expõe uma ferramenta genérica de requisição HTTP ou execuç�
 6. Consulta `case_audit` e `case_export` antes de produzir um relatório.
 7. Mantém explícitas as lacunas, contradições, incertezas e explicações alternativas.
 
+## Raciocínio investigativo e dossiê
+
+- `forensic_reasoning_contract`: contrato das verificações de evidências e hipóteses.
+- `audit_forensic_dossier(case_id, review)`: matriz estruturada por achado,
+  fontes e localizadores, linhagens independentes, contradições e hipóteses rivais.
+  O `review` informa `criteria` e `hypotheses`, usando apenas IDs existentes
+  do `CaseStore`. Não envia, publica, acessa documentos novos ou conclui culpa.
+- O status `READY_WITH_LIMITATIONS` é **apenas aptidão estrutural para revisão humana**,
+  nunca habilitação de protocolo. `QUARANTINED` significa lacuna crítica.
+
+Veja `docs/INVESTIGATIVE-REASONING-BR.md`.
+
 ## Limites atuais
 
 O MCP é uma camada de interoperabilidade. Ele não cria automaticamente uma plataforma multiusuário, não fornece autenticação remota, não substitui o banco de produção e não libera todos os adapters nacionais. Para produção, adicione RBAC/ABAC, isolamento por caso, criptografia, backup, retenção, logs externos e revisão jurídica/privacidade.
