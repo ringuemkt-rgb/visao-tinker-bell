@@ -115,6 +115,26 @@ pytest
 11. Ferramenta só aparece como executada se realmente foi executada.
 12. Scores são prioridade de revisão, nunca probabilidade de culpa.
 
+## Grok Bot, autonomia read-only e skills (nova integração)
+
+A branch `feature/grok-forensic-autonomy-20261029` inclui duas skills compatíveis com Grok Build:
+`.grok/skills/forensic-intelligence-br/SKILL.md` e
+`.grok/skills/human-writing-os/SKILL.md`.
+
+O servidor MCP disponibiliza `plan_public_queries`, `run_public_queries`,
+`optional_toolcheck` e `draft_official_notice`. O executor oficial opera
+sobre uma lista permitida de consultas (PNCP, TSE e cadastros de sanções),
+até cinco por execução, auditadas em CaseStore; não envia denúncias.
+
+Veja [integração Grok e segurança](docs/AUTONOMY-GROK.md),
+[prompt Grok Bot](docs/GROK-BOT-PROMPT.md),
+[catálogo de ferramentas opcionais](docs/TOOLS-OPTIONAL.md) e
+[checklist de contratos diretos](docs/LEGAL-CASE-CHECKLIST.md).
+
+**Conexão real requer um MCP HTTPS autenticado e autorizado, hospedado separadamente.**
+O GitHub não instala modelos nem cria automaticamente um servidor ou Bot.
+Somente acione publicação ou protocolo após aprovação humana.
+
 ## Licença
 
 AGPL-3.0-only
