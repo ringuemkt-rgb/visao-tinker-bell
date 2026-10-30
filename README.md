@@ -135,6 +135,20 @@ Veja [integração Grok e segurança](docs/AUTONOMY-GROK.md),
 O GitHub não instala modelos nem cria automaticamente um servidor ou Bot.
 Somente acione publicação ou protocolo após aprovação humana.
 
+## Núcleo de raciocínio investigativo — matriz e falsificação
+
+O módulo `vtb/investigative_reasoning.py` gera a matriz de achados,
+linhagem de evidências, hipóteses concorrentes, lacunas e diligências
+a partir de casos já registrados. Por padrão, exige hipótese regular,
+critério jurídico com fonte e documentos primários com localizador
+e hash para alegações críticas. Não infere dolo ou culpa.
+
+As ferramentas MCP `forensic_reasoning_contract` e
+`audit_forensic_dossier` permitem ao Grok inspecionar o contrato e
+auditar um caso autorizado, sem publicá-lo. Consulte
+[metodologia baseada em fontes brasileiras](docs/INVESTIGATIVE-REASONING-BR.md)
+e a skill `.grok/skills/investigative-reasoning-br/SKILL.md`.
+
 ## Licença
 
 AGPL-3.0-only
