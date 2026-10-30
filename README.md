@@ -4,6 +4,48 @@
 
 > Encontrar não é provar. Correlação não é nexo. Red flag não é evidência. Fonte quebrada não é ausência.
 
+## Pacote de seis melhorias — 30/10/2026
+
+Integração principal: [PR #16](https://github.com/ringuemkt-rgb/visao-tinker-bell/pull/16). Guia: [docs/SIX-STAGE-UPGRADE.md](docs/SIX-STAGE-UPGRADE.md).
+
+O núcleo incorpora:
+- monitor de busca PNCP por CNPJ (configurado em GitHub Actions para rotina diária, sujeito à execução e disponibilidade);
+- intake documental de agentes políticos por UF/cargo, sem atribuição prévia de irregularidade;
+- detectores de despesas inspirados na Serenata/Rosie;
+- validação de alegações por fonte, localizador, arquivo original e hash conferido;
+- painel HTML/SVG de evidências, relações e hipóteses para uso local;
+- benchmark sintético de 12 controles e quatro julgados STJ como referências qualitativas sem pontuação.
+
+Os comandos abaixo são **locais**, não publicam dossiês ou acusações:
+
+~~~bash
+# Instalar em ambiente Python 3.11/3.12
+python -m pip install -e '.[dev]'
+
+# Consultar um contrato público como exemplo e gerar banco, relatório e painel
+python -m vtb.e2e_reference EXEMPLO-PNCP --output-dir data/private/exemplo
+
+# Abrir o HTML local: data/private/exemplo/index.html
+
+# Verificar um relatório estruturado (não significa comprovação de pagamento)
+python -m vtb.report_validator data/private/exemplo/forensic-report.json \
+  --case-export data/private/exemplo/case-export.json
+
+# Executar controles negativos e positivos sintéticos
+python -m vtb.benchmark --output data/private/benchmark.json
+
+# Capturar resultado de busca por fornecedor PNCP (sujeito a acesso à internet)
+python -m vtb.pncp_watch --output data/private/pncp-watch.json
+~~~
+
+Para afirmar FACT material em um relatório, o validador precisa do export do caso,
+originais locais e mapa por source_id; mesmo após SHA-256, é obrigatória revisão humana
+do trecho, da identidade e do contexto. Negativas de inexistência exigem revisão
+explícita da cobertura. Consulte o manual acima para as limitações.
+
+O exemplo PNCP e o benchmark NÃO demonstram desvio, corrupção, pagamento ou inexecução.
+Não versionar arquivos particulares no repositório público.
+
 ## Objetivo
 
 A VTB localiza e prioriza sinais objetivos em registros públicos, reconstrói fluxo financeiro e relacionamentos temporais, e preserva a cadeia de evidência. Ela é desenhada para responder: **o que os documentos demonstram, o que contradizem e qual evidência ainda falta?**
