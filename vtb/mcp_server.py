@@ -274,6 +274,29 @@ def draft_official_notice(case_id: str, recipient: str, claim_ids: list[str]) ->
         store.close()
 
 
+
+@mcp.tool()
+def forensic_reasoning_contract() -> str:
+    """List evidence-first dossier inputs, human gates and safety limits."""
+    from .investigative_reasoning import reasoning_contract
+    return _json(reasoning_contract())
+
+
+@mcp.tool()
+def audit_forensic_dossier(case_id: str, review: dict[str, Any]) -> str:
+    """Audit a stored case with TCU-style finding matrices and rival hypotheses.
+
+    Only references already recorded in CaseStore count as evidence.
+    This is read-only: never submits, publishes or imputes misconduct.
+    """
+    from .investigative_reasoning import audit_dossier
+    store = _store()
+    try:
+        return _json(audit_dossier(store, case_id, review))
+    finally:
+        store.close()
+
+
 def main() -> None:
     transport = os.environ.get("VTB_MCP_TRANSPORT", "stdio")
     if transport not in {"stdio", "streamable-http", "sse"}:
