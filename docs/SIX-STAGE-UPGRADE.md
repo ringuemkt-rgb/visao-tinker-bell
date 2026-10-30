@@ -95,6 +95,12 @@ synthetic**. Elas NÃO representam taxa de falso positivo ou qualidade de períc
 
     python -m vtb.benchmark --output ./benchmark-synthetic.json
 
+Referências qualitativas oficiais, sem avaliação automática: arquivo
+config/judicial_reference_cases.json, com quatro acórdãos/decisões STJ de resultados
+jurídicos distintos e fonte oficial individual. Estão marcados como corpus NÃO
+pontuado, sem revisão cega e sem originais integrais arquivados. Não converter
+esse conjunto em taxa de sensibilidade/especificidade real.
+
 **Benchmark externo ainda necessário:** corpus independente de decisões auditadas e atos regulares
 comparáveis, revisão cega, várias esferas/anos, acesso a originais, amostra enviesada controlada
 e relatório de incerteza. Decisão judicial não é rótulo automaticamente transferível a outro caso.
