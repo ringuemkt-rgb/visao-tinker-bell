@@ -237,7 +237,42 @@ def _markdown(result: dict[str, Any]) -> str:
             f"| {_safe_md(item['claim_id'])}: {_safe_md(item['condition'])} | "
             f"{criterion_text} | {evidence} | {', '.join(item['gaps']) or 'sem lacunas estruturais'} |"
         )
-    lines.extend(["", "## Hipóteses rivais e testes de falsificação"])
+    lines.extend(["", "## Índice documental e cadeia de origem"])
+    source_index = {
+        entry["source_id"]: entry
+        for finding in result["matrix"] for entry in finding["evidence"]
+    }
+    for source_id, entry in sorted(source_index.items()):
+        lines.append(
+            f"- **{_safe_md(source_id)}**: {_safe_md(entry['url'])}; "
+            f"linhagem {_safe_md(entry['lineage'])}; "
+            f"integridade SHA-256 {_safe_md(entry['sha256'])}; "
+            f"saúde {_safe_md(entry['source_health'])}."
+        )
+    if not source_index:
+        lines.append("- Nenhum documento foi validamente registrado no escopo.")
+
+    lines.extend(["", "## Causas, efeitos, atribuição e contraditório"])
+    for item in result["matrix"]:
+        lines.extend([
+            f"### {_safe_md(item['claim_id'])}",
+            f"- Causa: {_safe_md(item['cause'])}",
+            f"- Efeito: {_safe_md(item['effect'])}",
+            f"- Manifestação do órgão: {_safe_md(item['response_of_audited_entity'])}",
+            f"- Encaminhamento: {_safe_md(item['disposition'])}",
+        ])
+
+    lines.extend([
+        "",
+        "## Execução orçamentária, preço e atribuições administrativas",
+        "PENDENTE: conciliar valores estimados, adjudicados, contratados, empenhados, "
+        "liquidados, pagos e efetivamente executados, sem somar etapas.",
+        "PENDENTE: comparar serviços com atribuições legais e exercício efetivo "
+        "do quadro próprio; não inferir duplicidade pelo nome do cargo.",
+        "PENDENTE: validar comparáveis de preço, especificação, período e localidade.",
+        "",
+        "## Hipóteses rivais e testes de falsificação",
+    ])
     for hypothesis in result["hypotheses"]:
         lines.append(
             f"- **{_safe_md(hypothesis['hypothesis_id'])} ({hypothesis['kind']})**: "
