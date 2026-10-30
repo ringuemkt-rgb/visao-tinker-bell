@@ -39,5 +39,23 @@ VERIFIED_PRIMARY, VERIFIED_CORROBORATED, PARTIALLY_SUPPORTED, UNVERIFIED, CONTRA
 8. Red Team before sensitive publication.
 9. Critical unsupported claims are quarantined.
 
+## Integração de seis melhorias — PR #16
+
+Antes de uma investigação sensível, consultar:
+- [docs/ADAPTIVE-FORENSIC-RESEARCH.md](docs/ADAPTIVE-FORENSIC-RESEARCH.md): catálogo, barreiras, fontes.
+- [docs/LEGAL-ADVERSARIAL-REVIEW.md](docs/LEGAL-ADVERSARIAL-REVIEW.md): revisão jurídica, contraprovas e encaminhamento.
+- [docs/POLITICIAN-FORENSIC-REPORT.md](docs/POLITICIAN-FORENSIC-REPORT.md): mapeamento por cargo e esquema de conclusão.
+- [docs/SERENATA-PORT.md](docs/SERENATA-PORT.md): detectores Rosie e visualizador Jarbas local.
+- [docs/SIX-STAGE-UPGRADE.md](docs/SIX-STAGE-UPGRADE.md): execução reproduzível, limites, validação e benchmark.
+
+Toda revisão de publicabilidade exige IDs de evidência realmente verificados, inspeção do documento
+original, comparação de hashes e revisão humana; um sinal de revisão declarado sozinho não comprova
+essa inspeção. Na contagem de corroboração, agrupar todos os trechos por fonte original;
+sem linha de proveniência, não elevar automaticamente a prioridade.
+
+Um caso de referência ao PNCP é deliberadamente inconclusivo sobre empenhos, pagamentos
+e entregas até que essas etapas sejam comprovadas. Testes sintéticos não significam
+desempenho real medido. Nenhuma acusação ou transmissão automática a órgãos de controle.
+
 ## Final rule
 Prefer `INCONCLUSIVE` or `READY_WITH_LIMITATIONS` over a stronger claim than the evidence can support.
