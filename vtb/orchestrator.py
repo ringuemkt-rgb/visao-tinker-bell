@@ -79,7 +79,7 @@ class TinkerBellEngine:
     def next_query(self, case_id: str) -> QueryCandidate | None:
         return next_best_query(self.cases[case_id].queries)
 
-    def decision(self, case_id: str, legal_review_done: bool = True) -> tuple[GateResult, MissionState]:
+    def decision(self, case_id: str, legal_review_done: bool = False) -> tuple[GateResult, MissionState]:
         ctx = self.cases[case_id]
         gate = publication_gate(ctx.ledger, ctx.red_team.passed, legal_review_done)
         material = any(c.materiality in {"high", "critical"} for c in ctx.ledger.claims.values())
