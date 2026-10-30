@@ -230,6 +230,26 @@ def triage_signals(signals: list[dict[str, Any]]) -> str:
     return _json({"triage_band": triage_band(parsed), "signal_count": len(parsed), "not_a_finding_of_guilt": True})
 
 
+
+@mcp.tool()
+def plan_public_queries(case_id: str, queries: list[dict[str, Any]]) -> str:
+    """Validate a bounded, allowlisted public-source plan; do not execute it."""
+    from .autonomy import build_readonly_plan
+    return _json(build_readonly_plan(case_id, queries))
+
+
+@mcp.tool()
+def run_public_queries(case_id: str, queries: list[dict[str, Any]]) -> str:
+    """Execute at most five read-only official-adapter queries for an existing case."""
+    from .autonomy import build_readonly_plan, execute_readonly_plan
+    plan = build_readonly_plan(case_id, queries)
+    store = _store()
+    try:
+        return _json(execute_readonly_plan(plan, store=store))
+    finally:
+        store.close()
+
+
 def main() -> None:
     transport = os.environ.get("VTB_MCP_TRANSPORT", "stdio")
     if transport not in {"stdio", "streamable-http", "sse"}:
