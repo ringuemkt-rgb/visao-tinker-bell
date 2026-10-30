@@ -12,7 +12,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from .serenata_screening import PublicExpense, screen_expenses
+from .serenata_screening import PublicExpense, input_fingerprint, screen_expenses
 
 
 def esc(value: object) -> str:
@@ -25,6 +25,8 @@ def render_review(expenses: list[PublicExpense], screening: dict[str, Any]) -> s
         raise ValueError("unsupported screening format")
     if screening.get("records_examined") != len(expenses):
         raise ValueError("record count does not match the related screening")
+    if screening.get("input_sha256") != input_fingerprint(expenses):
+        raise ValueError("screening input hash does not match these records")
     rows_by_day: dict[tuple[str, str], list[int]] = defaultdict(list)
     for index, row in enumerate(expenses):
         rows_by_day[(row.actor_id, row.issue_date.isoformat())].append(index)
