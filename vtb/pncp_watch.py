@@ -33,13 +33,13 @@ def _official_url(value: Any) -> str | None:
         return None
     if value.startswith("https://pncp.gov.br/"):
         return value
-    if value.startswith("/app/"):
+    if value.startswith("/app/") or value.startswith("/contratos/"):
         return "https://pncp.gov.br" + value
     return None
 
 
 def _record(item: dict[str, Any], expected: str) -> dict[str, Any] | None:
-    supplier = str(item.get("cnpj_fornecedor") or "")
+    supplier = str(item.get("fornecedor_ni") or item.get("cnpj_fornecedor") or "")
     if not supplier or normalize_cnpj(supplier) != expected:
         return None
     key = str(item.get("numero_controle_pncp") or item.get("id") or "")
@@ -48,7 +48,7 @@ def _record(item: dict[str, Any], expected: str) -> dict[str, Any] | None:
     return {
         "pncp_id": key,
         "supplier_cnpj": expected,
-        "supplier_name_as_published": item.get("nome_fornecedor"),
+        "supplier_name_as_published": item.get("fornecedor_nome") or item.get("nome_fornecedor"),
         "contracting_agency": item.get("orgao_nome"),
         "contracting_agency_cnpj": item.get("orgao_cnpj"),
         "municipality": item.get("municipio_nome"),
@@ -58,6 +58,7 @@ def _record(item: dict[str, Any], expected: str) -> dict[str, Any] | None:
         "signature_date": item.get("data_assinatura"),
         "contract_global_value": item.get("valor_global"),
         "pncp_url": _official_url(item.get("item_url")),
+        "index_raw_item_url": item.get("item_url"),
         "data_stage": "PUBLISHED_CONTRACT_NOT_PAYMENT",
     }
 
