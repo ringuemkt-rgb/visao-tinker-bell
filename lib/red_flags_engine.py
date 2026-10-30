@@ -30,6 +30,8 @@ class RedFlagsEngine:
     def __init__(self, rules_path: Optional[Path] = None):
         if rules_path is None:
             rules_path = Path(__file__).parent.parent / "rules" / "red_flags.json"
+            if not rules_path.exists():
+                rules_path = Path(__file__).parent.parent / "vtb" / "data" / "red_flags.json"
         with open(rules_path, encoding="utf-8") as f:
             self.rules = {r["id"]: r for r in json.load(f)}
         self.errors: list[dict[str, str]] = []
